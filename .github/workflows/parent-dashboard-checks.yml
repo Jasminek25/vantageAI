@@ -19,5 +19,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # npm can omit Rollup's platform package from lockfiles created on macOS.
+      - run: npm install --no-save @rollup/rollup-linux-x64-gnu@4.62.2
       - run: npm run validate
       - run: npm run build
