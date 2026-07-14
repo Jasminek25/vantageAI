@@ -1,6 +1,6 @@
 # Heirline Parent Dashboard
 
-Vedang's parent-side product prototype for the team's shared inheritance-planning web application.
+Parent-side product prototype for the team's shared inheritance-planning web application.
 
 This branch deliberately contains only the parent experience. Aayush owns the heir dashboard and its Gemini-backed AI coach; Jasmine owns the broader shared website direction. The parent app exposes a documented frontend service boundary so their work can be connected without placing API keys or private backend data in browser code.
 
