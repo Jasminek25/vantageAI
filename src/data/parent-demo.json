@@ -1,0 +1,28 @@
+{
+  "family": {
+    "id": "demo-family-001",
+    "name": "Rivera family",
+    "primaryResidence": "California, United States",
+    "citizenship": "United States",
+    "lastReview": "2026-05-18",
+    "mode": "fictional demo"
+  },
+  "documents": [
+    { "id": "will", "name": "Last will & testament", "category": "Estate", "status": "complete", "lastReviewed": "2026-04-10", "owner": "Elena Rivera", "advisor": "Morgan Lee · Estate attorney", "nextAction": "Review after major life event" },
+    { "id": "trust", "name": "Revocable living trust", "category": "Estate", "status": "review", "lastReviewed": "2016-08-22", "owner": "Elena Rivera", "advisor": "Morgan Lee · Estate attorney", "nextAction": "Schedule attorney review" },
+    { "id": "beneficiaries", "name": "Beneficiary designations", "category": "Accounts", "status": "attention", "lastReviewed": "Unknown", "owner": "Elena Rivera", "advisor": "Dana Kim · Wealth advisor", "nextAction": "Confirm 401(k) and insurance forms" },
+    { "id": "poa", "name": "Financial power of attorney", "category": "Authority", "status": "complete", "lastReviewed": "2024-11-03", "owner": "Elena Rivera", "advisor": "Morgan Lee · Estate attorney", "nextAction": "No action due" },
+    { "id": "healthcare", "name": "Healthcare directive", "category": "Healthcare", "status": "missing", "lastReviewed": "Not on file", "owner": "Unassigned", "advisor": "Morgan Lee · Estate attorney", "nextAction": "Create and sign directive" },
+    { "id": "insurance", "name": "Life insurance policies", "category": "Insurance", "status": "complete", "lastReviewed": "2025-12-15", "owner": "Elena Rivera", "advisor": "Dana Kim · Wealth advisor", "nextAction": "Annual review in December" }
+  ],
+  "heirs": [
+    { "id": "maya", "name": "Maya Rivera", "relationship": "Daughter · age 25", "connection": "connected", "engagement": 82, "literacy": 76, "learningGoal": "Trust distributions", "recommendation": "Continue advanced investing path" },
+    { "id": "arjun", "name": "Arjun Rivera", "relationship": "Son · age 21", "connection": "connected", "engagement": 46, "literacy": 58, "learningGoal": "Trust basics", "recommendation": "Assign a five-minute trust explainer" },
+    { "id": "leena", "name": "Leena Rivera", "relationship": "Daughter · age 17", "connection": "invited", "engagement": 0, "literacy": 0, "learningGoal": "Financial foundations", "recommendation": "Waiting for account consent" }
+  ],
+  "jurisdictions": [
+    { "id": "california", "label": "California, USA", "type": "Primary residence", "assets": ["Primary home", "Brokerage account", "401(k)"], "flags": ["State probate process", "Beneficiary forms may override will", "Federal and state review needed"], "professional": "Estate attorney + tax advisor" },
+    { "id": "singapore", "label": "Singapore", "type": "Asset location", "assets": ["Private company shares"], "flags": ["Foreign ownership documentation", "Succession and control may transfer separately", "US reporting questions"], "professional": "Cross-border counsel" },
+    { "id": "malaysia", "label": "Malaysia", "type": "Asset location", "assets": ["Family property"], "flags": ["Title and ownership confirmation", "Local inheritance procedure", "Residency interaction"], "professional": "Local estate counsel" }
+  ]
+}
