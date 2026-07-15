@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vantage AI — Inheritance &amp; Wealth Planning</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:wght@500;600&display=swap');
+
+  :root{
+    --navy-950:#0B1220;
+    --navy-900:#101B2D;
+    --navy-800:#16233A;
+    --navy-700:#243352;
+    --navy-600:#354467;
+    --gold-500:#C9A227;
+    --gold-400:#D8B94A;
+    --gold-100:#F5EACD;
+    --bg:#F6F4EF;
+    --card:#FFFFFF;
+    --text-primary:#16233A;
+    --text-secondary:#5B6B82;
+    --text-muted:#8B95A6;
+    --border:#E5E1D6;
+    --border-soft:#EEEBE2;
+    --success:#2E7D5B;
+    --success-bg:#E8F3ED;
+    --warning:#B8862A;
+    --warning-bg:#FBF2DF;
+    --danger:#B4453A;
+    --danger-bg:#FBEAE7;
+    --radius:14px;
+    --radius-sm:9px;
+    --shadow-sm:0 1px 2px rgba(16,27,45,0.06);
+    --shadow-md:0 6px 20px rgba(16,27,45,0.08);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg);
+    color:var(--text-primary);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces','Inter',serif; margin:0; font-weight:600; letter-spacing:-0.01em;}
+  p{margin:0;}
+  a{color:inherit; text-decoration:none;}
+  ul{margin:0; padding:0; list-style:none;}
+  button{font-family:inherit; cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+
+  /* ---------- Utility ---------- */
+  .hidden{display:none !important;}
+  .muted{color:var(--text-secondary);}
+  .small{font-size:12.5px;}
+  .flex{display:flex;}
+  .between{justify-content:space-between;}
+  .center{align-items:center;}
+  .gap-8{gap:8px;}
+  .gap-12{gap:12px;}
+  .gap-16{gap:16px;}
+  .wrap{flex-wrap:wrap;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:10px 18px; border-radius:9px; border:1px solid transparent;
+    font-size:14px; font-weight:600; transition:all .15s ease; white-space:nowrap;
+  }
+  .btn-primary{background:var(--navy-900); color:#fff;}
+  .btn-primary:hover{background:var(--navy-800);}
+  .btn-gold{background:var(--gold-500); color:var(--navy-950);}
+  .btn-gold:hover{background:var(--gold-400);}
+  .btn-secondary{background:#fff; color:var(--navy-900); border-color:var(--border);}
+  .btn-secondary:hover{border-color:var(--navy-600); background:#FBFAF7;}
+  .btn-ghost{background:transparent; color:var(--text-secondary); border-color:transparent;}
+  .btn-ghost:hover{background:var(--border-soft);}
+  .btn-sm{padding:6px 12px; font-size:13px;}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+
+  .badge{display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:600;}
+  .badge-neutral{background:var(--border-soft); color:var(--text-secondary);}
+  .badge-warning{background:var(--warning-bg); color:var(--warning);}
+  .badge-success{background:var(--success-bg); color:var(--success);}
+  .badge-danger{background:var(--danger-bg); color:var(--danger);}
+  .badge-gold{background:var(--gold-100); color:#8A6D14;}
+  .dot{width:6px; height:6px; border-radius:50%; background:currentColor;}
+
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-sm);}
+  .card-pad{padding:22px;}
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px;}
+  .card-title{font-size:16px; font-weight:600; font-family:'Fraunces',serif;}
+  .card-sub{font-size:13px; color:var(--text-secondary); margin-top:3px;}
+
+  .grid{display:grid; gap:18px;}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:1000px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+
+  /* ---------- Empty states ---------- */
+  .empty-state{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    padding:34px 20px; border:1.5px dashed var(--border); border-radius:var(--radius-sm); background:#FCFBF8;
+    gap:10px;
+  }
+  .empty-icon{
+    width:42px; height:42px; border-radius:50%; background:var(--gold-100); color:#8A6D14;
+    display:flex; align-items:center; justify-content:center; font-size:19px;
+  }
+  .empty-state h4{font-size:14.5px; font-weight:600; color:var(--text-primary);}
+  .empty-state p{font-size:13px; color:var(--text-secondary); max-width:340px; line-height:1.5;}
+
+  /* ---------- Form elements ---------- */
+  .form-group{display:flex; flex-direction:column; gap:6px; margin-bottom:16px;}
+  .form-group label{font-size:12.5px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.04em;}
+  .form-group input, .form-group select, .form-group textarea{
+    padding:10px 12px; border:1px solid var(--border); border-radius:8px; font-size:14px; background:#fff; color:var(--text-primary);
+  }
+  .form-group textarea{resize:vertical; min-height:70px;}
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus{outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(201,162,39,.15);}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+  /* ---------- Score ring ---------- */
+  .score-ring{position:relative; width:132px; height:132px; margin:0 auto;}
+  .score-ring svg{transform:rotate(-90deg);}
+  .score-ring .track{fill:none; stroke:var(--border-soft); stroke-width:10;}
+  .score-ring .fill{fill:none; stroke:var(--gold-500); stroke-width:10; stroke-linecap:round;}
+  .score-ring .val{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .score-ring .val .num{font-size:26px; font-weight:700; font-family:'Fraunces',serif; color:var(--text-primary);}
+  .score-ring .val .lbl{font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em;}
+
+  /* ---------- Tabs ---------- */
+  .tabbar{display:flex; gap:6px; border-bottom:1px solid var(--border); margin-bottom:20px; overflow-x:auto;}
+  .tab-btn{padding:10px 16px; font-size:13.5px; font-weight:600; color:var(--text-secondary); border-bottom:2px solid transparent; white-space:nowrap;}
+  .tab-btn.active{color:var(--navy-900); border-bottom-color:var(--gold-500);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* ---------- Checklist ---------- */
+  .checklist-item{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 4px; border-bottom:1px solid var(--border-soft);}
+  .checklist-item:last-child{border-bottom:none;}
+  .checklist-left{display:flex; align-items:center; gap:12px;}
+  .check-icon{width:30px; height:30px; border-radius:8px; background:var(--border-soft); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;}
+  .checklist-title{font-size:14px; font-weight:600;}
+  .checklist-meta{font-size:12px; color:var(--text-muted); margin-top:2px;}
+
+  /* ---------- Table ---------- */
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th{text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted); font-weight:600; padding:0 12px 10px; border-bottom:1px solid var(--border);}
+  td{padding:14px 12px; border-bottom:1px solid var(--border-soft); vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+
+  /* ---------- App shell ---------- */
+  #app-shell{display:none; min-height:100vh;}
+  #app-shell.active{display:flex;}
+  .sidebar{
+    width:246px; flex-shrink:0; background:var(--navy-950); color:#fff; min-height:100vh;
+    display:flex; flex-direction:column; padding:22px 16px; position:sticky; top:0; align-self:flex-start;
+  }
+  .sidebar-logo{display:flex; align-items:center; gap:10px; padding:6px 8px 22px;}
+  .sidebar-logo .mark{width:30px; height:30px; border-radius:8px; background:var(--gold-500); color:var(--navy-950); display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Fraunces',serif;}
+  .sidebar-logo .word{font-family:'Fraunces',serif; font-size:16px; font-weight:600;}
+  .sidebar-role{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.45); padding:0 20px 10px; margin-top:4px;}
+  .nav-link{
+    display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:9px; font-size:13.5px; font-weight:500;
+    color:rgba(255,255,255,.68); margin-bottom:2px;
+  }
+  .nav-link .ic{width:18px; text-align:center; font-size:14px;}
+  .nav-link:hover{background:rgba(255,255,255,.06); color:#fff;}
+  .nav-link.active{background:rgba(255,255,255,.1); color:#fff;}
+  .nav-link.active .ic{color:var(--gold-400);}
+  .sidebar-foot{margin-top:auto; padding-top:14px; border-top:1px solid rgba(255,255,255,.08);}
+  .switch-role-btn{width:100%; text-align:left; padding:10px 12px; border-radius:9px; font-size:13px; color:rgba(255,255,255,.55);}
+  .switch-role-btn:hover{background:rgba(255,255,255,.06); color:#fff;}
+
+  .main-col{flex:1; min-width:0;}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; padding:16px 32px;
+    background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:5;
+  }
+  .topbar h2{font-size:19px;}
+  .topbar .sub{font-size:12.5px; color:var(--text-secondary); margin-top:2px;}
+  .avatar{width:34px; height:34px; border-radius:50%; background:var(--navy-800); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600;}
+  .page{display:none; padding:28px 32px 60px;}
+  .page.active{display:block;}
+  .page-intro{margin-bottom:22px; max-width:720px;}
+  .page-intro p{color:var(--text-secondary); font-size:14px; margin-top:6px; line-height:1.6;}
+
+  /* ---------- Landing page ---------- */
+  #landing{display:block;}
+  #landing.hide{display:none;}
+  .nav-top{
+    display:flex; align-items:center; justify-content:space-between; padding:20px 48px; max-width:1200px; margin:0 auto;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .mark{width:34px; height:34px; border-radius:9px; background:var(--navy-950); color:var(--gold-400); display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Fraunces',serif; font-size:16px;}
+  .brand .word{font-family:'Fraunces',serif; font-size:19px; font-weight:600; color:var(--navy-950);}
+  .nav-cta{display:flex; gap:10px;}
+
+  .hero{max-width:1200px; margin:0 auto; padding:64px 48px 40px; display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:center;}
+  @media(max-width:960px){.hero{grid-template-columns:1fr; padding:40px 24px;}}
+  .hero-eyebrow{display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border-radius:999px; background:var(--gold-100); color:#8A6D14; font-size:12px; font-weight:700; letter-spacing:.03em; margin-bottom:20px;}
+  .hero h1{font-size:44px; line-height:1.12; color:var(--navy-950); margin-bottom:18px;}
+  .hero p.lead{font-size:16.5px; color:var(--text-secondary); line-height:1.65; max-width:520px; margin-bottom:30px;}
+  .hero-actions{display:flex; gap:12px; flex-wrap:wrap;}
+  .hero-visual{background:linear-gradient(160deg,var(--navy-950),var(--navy-800)); border-radius:22px; padding:34px; color:#fff; box-shadow:var(--shadow-md);}
+  .hero-visual .row{display:flex; align-items:center; justify-content:space-between; padding:13px 0; border-bottom:1px solid rgba(255,255,255,.1);}
+  .hero-visual .row:last-child{border-bottom:none;}
+  .hero-visual .row .lbl{font-size:13px; color:rgba(255,255,255,.65);}
+  .hero-visual .row .v{font-size:13px; font-weight:600; color:var(--gold-400);}
+
+  .role-picker{max-width:1200px; margin:10px auto 70px; padding:0 48px;}
+  @media(max-width:960px){.role-picker{padding:0 24px;}}
+  .role-picker h3{text-align:center; font-size:24px; color:var(--navy-950); margin-bottom:8px;}
+  .role-picker .sub-c{text-align:center; color:var(--text-secondary); font-size:14.5px; margin-bottom:34px;}
+  .role-cards{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  @media(max-width:900px){.role-cards{grid-template-columns:1fr;}}
+  .role-card{padding:28px; border:1px solid var(--border); border-radius:18px; background:#fff; transition:.15s; display:flex; flex-direction:column; gap:14px;}
+  .role-card:hover{border-color:var(--gold-500); box-shadow:var(--shadow-md); transform:translateY(-2px);}
+  .role-card .ic{width:44px; height:44px; border-radius:12px; background:var(--navy-950); color:var(--gold-400); display:flex; align-items:center; justify-content:center; font-size:19px;}
+  .role-card h4{font-size:17px;}
+  .role-card p{font-size:13.5px; color:var(--text-secondary); line-height:1.55;}
+  .role-card ul{margin-top:4px; display:flex; flex-direction:column; gap:6px;}
+  .role-card li{font-size:12.5px; color:var(--text-secondary); display:flex; gap:7px;}
+  .role-card li:before{content:"—"; color:var(--gold-500);}
+
+  .feature-strip{background:var(--navy-950); padding:56px 48px; margin-top:10px;}
+  .feature-strip-in{max-width:1200px; margin:0 auto;}
+  .feature-strip h3{color:#fff; font-size:24px; text-align:center; margin-bottom:36px;}
+  .feature-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  @media(max-width:900px){.feature-grid{grid-template-columns:1fr;}}
+  .feature-tile{padding:22px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);}
+  .feature-tile .ic{color:var(--gold-400); font-size:18px; margin-bottom:12px;}
+  .feature-tile h5{color:#fff; font-size:14.5px; margin-bottom:8px; font-family:'Fraunces',serif; font-weight:600;}
+  .feature-tile p{color:rgba(255,255,255,.6); font-size:12.8px; line-height:1.6;}
+
+  .landing-foot{padding:26px 48px; text-align:center; color:var(--text-muted); font-size:12.5px;}
+
+  /* ---------- Chat ---------- */
+  .chat-window{border:1px solid var(--border); border-radius:var(--radius-sm); min-height:260px; display:flex; flex-direction:column; background:#FCFBF8;}
+  .chat-messages{flex:1; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .chat-suggestions{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:14px;}
+  .chip{padding:7px 13px; border-radius:999px; border:1px solid var(--border); background:#fff; font-size:12.5px; color:var(--text-secondary);}
+  .chip:hover{border-color:var(--gold-500); color:var(--navy-900);}
+  .chat-input-row{display:flex; gap:10px; padding:14px; border-top:1px solid var(--border);}
+  .chat-input-row input{flex:1; padding:11px 14px; border:1px solid var(--border); border-radius:9px; font-size:14px;}
+
+  /* ---------- Timeline ---------- */
+  .timeline{position:relative; padding-left:26px;}
+  .timeline:before{content:""; position:absolute; left:6px; top:6px; bottom:6px; width:2px; background:var(--border);}
+  .t-item{position:relative; padding-bottom:26px;}
+  .t-item:last-child{padding-bottom:0;}
+  .t-item:before{content:""; position:absolute; left:-26px; top:3px; width:12px; height:12px; border-radius:50%; background:var(--gold-500); border:3px solid var(--gold-100);}
+  .t-age{font-size:12px; font-weight:700; color:var(--gold-500); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;}
+  .t-body{background:#FCFBF8; border:1px solid var(--border); border-radius:10px; padding:14px 16px;}
+
+  /* ---------- Scenario cards ---------- */
+  .scenario-card{border:1.5px solid var(--border); border-radius:12px; padding:18px; text-align:left; background:#fff; display:flex; flex-direction:column; gap:8px;}
+  .scenario-card:hover{border-color:var(--gold-500);}
+  .scenario-card.selected{border-color:var(--gold-500); background:var(--gold-100);}
+  .scenario-card .ic{font-size:18px;}
+  .scenario-card h5{font-size:14px;}
+  .scenario-card p{font-size:12.5px; color:var(--text-secondary); line-height:1.5;}
+
+  /* ---------- Location tabs ---------- */
+  .loc-tab{display:flex; align-items:center; justify-content:space-between; padding:13px 14px; border:1px solid var(--border); border-radius:9px; margin-bottom:8px; background:#fff;}
+  .loc-tab .l{display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:600;}
+
+  /* ---------- Heir profile card ---------- */
+  .heir-card{border:1px solid var(--border); border-radius:14px; padding:18px; background:#fff;}
+  .heir-card-top{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .heir-avatar{width:38px; height:38px; border-radius:50%; background:var(--border-soft); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-size:14px;}
+  .stat-mini{display:flex; justify-content:space-between; font-size:12.5px; padding:6px 0; border-bottom:1px solid var(--border-soft);}
+  .stat-mini:last-of-type{border-bottom:none;}
+
+  ::-webkit-scrollbar{width:9px; height:9px;}
+  ::-webkit-scrollbar-thumb{background:#D8D4C8; border-radius:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- LANDING PAGE -->
+<!-- ============================================================ -->
+<div id="landing">
+  <div class="nav-top">
+    <div class="brand"><div class="mark">V</div><div class="word">Vantage AI</div></div>
+    <div class="nav-cta">
+      <button class="btn btn-ghost btn-sm" onclick="scrollToPicker()">How it works</button>
+      <button class="btn btn-secondary btn-sm" onclick="scrollToPicker()">Sign in</button>
+      <button class="btn btn-primary btn-sm" onclick="scrollToPicker()">Get started</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">✦ AI-Guided Estate &amp; Wealth Transfer Planning</div>
+      <h1>Plan the handoff. Prepare the next generation.</h1>
+      <p class="lead">Vantage AI helps families organize wills, trusts, and beneficiary plans, simulate wealth transfer strategies, and prepare heirs to receive and manage what they inherit — all in one connected platform.</p>
+      <div class="hero-actions">
+        <button class="btn btn-gold" onclick="scrollToPicker()">Choose your dashboard</button>
+        <button class="btn btn-secondary" onclick="scrollToStrip()">See all features</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="row"><span class="lbl">Inheritance Readiness Score</span><span class="v">— / 100</span></div>
+      <div class="row"><span class="lbl">Legal documents on file</span><span class="v">Not connected</span></div>
+      <div class="row"><span class="lbl">Heirs linked to this plan</span><span class="v">0</span></div>
+      <div class="row"><span class="lbl">Jurisdictions tracked</span><span class="v">0</span></div>
+      <div class="row"><span class="lbl">Next milestone review</span><span class="v">—</span></div>
+    </div>
+  </div>
+
+  <div class="role-picker" id="role-picker">
+    <h3>One platform, three vantage points</h3>
+    <p class="sub-c">Select a dashboard to preview the frontend experience for each role.</p>
+    <div class="role-cards">
+      <div class="role-card">
+        <div class="ic">◆</div>
+        <h4>Parent / Wealth Holder</h4>
+        <p>Assess estate readiness, plan your legacy, simulate transfer strategies, and supervise your heirs' progress.</p>
+        <ul>
+          <li>Inheritance Readiness Assessment</li>
+          <li>Legacy Planner</li>
+          <li>Wealth Transfer Simulator</li>
+          <li>Professional Coordination Hub</li>
+          <li>Supervising Page</li>
+          <li>Jurisdictional Location</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-top:8px;" onclick="enterApp('parent')">Enter Parent Dashboard</button>
+      </div>
+      <div class="role-card">
+        <div class="ic">◇</div>
+        <h4>Heir</h4>
+        <p>Learn from an AI financial coach, simulate what to do with an inheritance, and build a personalized wealth roadmap.</p>
+        <ul>
+          <li>AI Financial Coach</li>
+          <li>Wealth Simulator</li>
+          <li>Personalized Wealth Roadmap</li>
+          <li>Documentation Checklist</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-top:8px;" onclick="enterApp('heir')">Enter Heir Dashboard</button>
+      </div>
+      <div class="role-card">
+        <div class="ic">▣</div>
+        <h4>Wealth Manager</h4>
+        <p>Track engagement across parent and heir accounts and step in with guided interventions when needed.</p>
+        <ul>
+          <li>Client Household Overview</li>
+          <li>Parent &amp; Heir Progress Tracking</li>
+          <li>Alerts &amp; Interventions</li>
+        </ul>
+        <button class="btn btn-primary btn-block" style="margin-top:8px;" onclick="enterApp('manager')">Enter Manager Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="feature-strip" id="feature-strip">
+    <div class="feature-strip-in">
+      <h3>What Vantage AI does</h3>
+      <div class="feature-grid">
+        <div class="feature-tile"><div class="ic">①</div><h5>Readiness Assessment</h5><p>Reviews wills, trusts, and beneficiary designations to generate a readiness score and next steps.</p></div>
+        <div class="feature-tile"><div class="ic">②</div><h5>Legacy Planner</h5><p>Document financial goals, family values, and inheritance instructions in one living plan.</p></div>
+        <div class="feature-tile"><div class="ic">③</div><h5>Wealth Transfer Simulator</h5><p>Compare equal inheritance, trust distributions, and staggered distribution strategies.</p></div>
+        <div class="feature-tile"><div class="ic">④</div><h5>Professional Coordination Hub</h5><p>Track legal documents, professional contacts, and life-event milestones in one checklist.</p></div>
+        <div class="feature-tile"><div class="ic">⑤</div><h5>Supervising Page</h5><p>See engagement and financial literacy across every linked heir account.</p></div>
+        <div class="feature-tile"><div class="ic">⑥</div><h5>Jurisdictional Location</h5><p>Surface cross-border legal and tax considerations tied to each asset's location.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-foot">Vantage AI — frontend preview build. No live data is connected in this build.</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PARENT APP -->
+<!-- ============================================================ -->
+<div class="app-shell" id="app-parent">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="mark">V</div><div class="word">Vantage AI</div></div>
+    <div class="sidebar-role">Parent Dashboard</div>
+    <nav>
+      <a class="nav-link active" data-page="p-overview"><span class="ic">⌂</span>Overview</a>
+      <a class="nav-link" data-page="p-readiness"><span class="ic">①</span>Readiness Assessment</a>
+      <a class="nav-link" data-page="p-legacy"><span class="ic">②</span>Legacy Planner</a>
+      <a class="nav-link" data-page="p-simulator"><span class="ic">③</span>Wealth Transfer Simulator</a>
+      <a class="nav-link" data-page="p-hub"><span class="ic">④</span>Coordination Hub</a>
+      <a class="nav-link" data-page="p-supervise"><span class="ic">⑤</span>Supervising Page</a>
+      <a class="nav-link" data-page="p-location"><span class="ic">⑥</span>Jurisdictional Location</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a class="switch-role-btn" onclick="goLanding()">← Switch role / sign out</a>
+    </div>
+  </div>
+
+  <div class="main-col">
+    <div class="topbar">
+      <div><h2 id="p-page-title">Overview</h2><div class="sub" id="p-page-sub">Your estate planning snapshot</div></div>
+      <div class="flex center gap-12"><button class="btn btn-secondary btn-sm">Invite heir</button><div class="avatar">PW</div></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="p-overview">
+      <div class="grid grid-4" style="margin-bottom:20px;">
+        <div class="card card-pad">
+          <div class="card-sub">Readiness score</div>
+          <h3 style="font-size:28px; margin-top:6px;">— <span style="font-size:14px; color:var(--text-muted); font-family:Inter;">/ 100</span></h3>
+          <div class="small muted" style="margin-top:6px;">Not yet assessed</div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-sub">Documents up to date</div>
+          <h3 style="font-size:28px; margin-top:6px;">0 <span style="font-size:14px; color:var(--text-muted); font-family:Inter;">/ 6</span></h3>
+          <div class="small muted" style="margin-top:6px;">No documents connected</div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-sub">Heirs linked</div>
+          <h3 style="font-size:28px; margin-top:6px;">0</h3>
+          <div class="small muted" style="margin-top:6px;">No heir accounts yet</div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-sub">Upcoming milestones</div>
+          <h3 style="font-size:28px; margin-top:6px;">0</h3>
+          <div class="small muted" style="margin-top:6px;">No life events detected</div>
+        </div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card card-pad">
+          <div class="card-head"><div><div class="card-title">Recommended next steps</div><div class="card-sub">Generated once your assessment and documents are connected</div></div></div>
+          <div class="empty-state">
+            <div class="empty-icon">✓</div>
+            <h4>No recommendations yet</h4>
+            <p>Complete the Inheritance Readiness Assessment to generate a personalized to-do list.</p>
+            <button class="btn btn-primary btn-sm" onclick="goPage('parent','p-readiness')">Start assessment</button>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-head"><div><div class="card-title">Recent activity</div><div class="card-sub">Across your account and linked heirs</div></div></div>
+          <div class="empty-state">
+            <div class="empty-icon">◷</div>
+            <h4>No activity yet</h4>
+            <p>Account activity, heir engagement, and document updates will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- READINESS ASSESSMENT -->
+    <div class="page" id="p-readiness">
+      <div class="page-intro"><p>The AI reviews your existing wills, trust status, beneficiary designations, and estate planning progress to produce a readiness score out of 100, then recommends what to add or update next.</p></div>
+      <div class="grid grid-2">
+        <div class="card card-pad" style="text-align:center;">
+          <div class="card-title" style="margin-bottom:16px;">Readiness score</div>
+          <div class="score-ring">
+            <svg width="132" height="132" viewBox="0 0 132 132">
+              <circle class="track" cx="66" cy="66" r="56"></circle>
+              <circle class="fill" cx="66" cy="66" r="56" stroke-dasharray="0 352"></circle>
+            </svg>
+            <div class="val"><div class="num">—</div><div class="lbl">out of 100</div></div>
+          </div>
+          <p class="muted small" style="margin-top:16px;">Run an assessment to generate your score.</p>
+          <button class="btn btn-gold" style="margin-top:14px;" onclick="runAssessment()">Run assessment</button>
+        </div>
+        <div class="card card-pad">
+          <div class="card-title" style="margin-bottom:8px;">What the AI reviews</div>
+          <div class="checklist-item"><div class="checklist-left"><div class="check-icon">W</div><div><div class="checklist-title">Existing wills</div><div class="checklist-meta">Not connected</div></div></div><button class="btn btn-secondary btn-sm">Upload</button></div>
+          <div class="checklist-item"><div class="checklist-left"><div class="check-icon">T</div><div><div class="checklist-title">Trust status</div><div class="checklist-meta">Not connected</div></div></div><button class="btn btn-secondary btn-sm">Upload</button></div>
+          <div class="checklist-item"><div class="checklist-left"><div class="check-icon">B</div><div><div class="checklist-title">Beneficiary designations</div><div class="checklist-meta">Legal instructions attached to accounts &amp; policies</div></div></div><button class="btn btn-secondary btn-sm">Connect</button></div>
+          <div class="checklist-item"><div class="checklist-left"><div class="check-icon">E</div><div><div class="checklist-title">Estate planning progress</div><div class="checklist-meta">Not started</div></div></div><button class="btn btn-secondary btn-sm">Update</button></div>
+        </div>
+      </div>
+      <div class="card card-pad" style="margin-top:18px;" id="readiness-results-card">
+        <div class="card-title" style="margin-bottom:10px;">Recommendations</div>
+        <div class="empty-state" id="readiness-empty">
+          <div class="empty-icon">i</div>
+          <h4>No recommendations yet</h4>
+          <p>Example of what will appear once connected: "Add the following missing items — updated trust documents, beneficiary review."</p>
+        </div>
+        <div class="hidden" id="readiness-filled">
+          <div class="checklist-item"><div class="checklist-left"><div class="check-icon">!</div><div><div class="checklist-title">Updated trust documents needed</div><div class="checklist-meta">Awaiting document upload</div></div></div><span class="badge badge-warning">Action needed</span></div>
+          <div class="checklist-item"><div class="checklist-left"><div class="check-icon">!</div><div><div class="checklist-title">Beneficiary review recommended</div><div class="checklist-meta">Awaiting document upload</div></div></div><span class="badge badge-warning">Action needed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEGACY PLANNER -->
+    <div class="page" id="p-legacy">
+      <div class="page-intro"><p>Document your financial goals for your children, family values, inheritance instructions, and roadmap. This plan pulls in recommendations from your other Vantage AI features to build your to-do list.</p></div>
+      <div class="grid" style="grid-template-columns:2fr 1fr;">
+        <div class="card card-pad">
+          <div class="tabbar">
+            <div class="tab-btn active" data-tab="lp-goals">Financial Goals</div>
+            <div class="tab-btn" data-tab="lp-values">Family Values</div>
+            <div class="tab-btn" data-tab="lp-instructions">Inheritance Instructions</div>
+            <div class="tab-btn" data-tab="lp-roadmap">Roadmap</div>
+            <div class="tab-btn" data-tab="lp-resources">Educational Resources</div>
+          </div>
+          <div class="tab-panel active" id="lp-goals">
+            <div class="form-group"><label>Financial goals for your children</label><textarea placeholder="e.g. Fund education, support a first home purchase, preserve long-term family wealth..."></textarea></div>
+            <button class="btn btn-primary btn-sm">Save goals</button>
+          </div>
+          <div class="tab-panel" id="lp-values">
+            <div class="form-group"><label>Family values to pass down</label><textarea placeholder="Describe the principles and values you want reflected in how your estate is used..."></textarea></div>
+            <button class="btn btn-primary btn-sm">Save values</button>
+          </div>
+          <div class="tab-panel" id="lp-instructions">
+            <div class="form-group"><label>Instructions regarding inheritance</label><textarea placeholder="Any specific instructions for how and when assets should be distributed..."></textarea></div>
+            <button class="btn btn-primary btn-sm">Save instructions</button>
+          </div>
+          <div class="tab-panel" id="lp-roadmap">
+            <div class="empty-state">
+              <div class="empty-icon">◷</div>
+              <h4>Roadmap not generated yet</h4>
+              <p>Your roadmap will combine recommendations from the Readiness Assessment and Wealth Transfer Simulator once available.</p>
+              <button class="btn btn-secondary btn-sm" onclick="goPage('parent','p-simulator')">Go to Wealth Transfer Simulator</button>
+            </div>
+          </div>
+          <div class="tab-panel" id="lp-resources">
+            <div class="empty-state">
+              <div class="empty-icon">📄</div>
+              <h4>No resources linked yet</h4>
+              <p>Educational articles and documents relevant to your plan will be suggested here.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-title" style="margin-bottom:10px;">Your to-do list</div>
+          <div class="empty-state">
+            <div class="empty-icon">✓</div>
+            <h4>Nothing yet</h4>
+            <p>Your personalized to-do list is generated from this plan plus recommendations from other features.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEALTH TRANSFER SIMULATOR -->
+    <div class="page" id="p-simulator">
+      <div class="page-intro"><p>Explore equal inheritance, trust distributions, and staggered distribution strategies to see hypothetical outcomes before finalizing your plan in the Legacy Planner.</p></div>
+      <div class="card card-pad">
+        <div class="card-title" style="margin-bottom:14px;">Choose a strategy to explore</div>
+        <div class="grid grid-3">
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">⚖</div><h5>Equal inheritance</h5><p>Distribute assets equally across all named heirs.</p></div>
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">🏛</div><h5>Trust distributions</h5><p>Assets are held and released via trust terms and conditions.</p></div>
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">◷</div><h5>Staggered distributions</h5><p>Release portions of the estate at defined ages or milestones.</p></div>
+        </div>
+        <div class="form-row" style="margin-top:20px;">
+          <div class="form-group"><label>Estimated estate value</label><input type="text" placeholder="$ —"></div>
+          <div class="form-group"><label>Number of heirs</label><input type="number" placeholder="—"></div>
+        </div>
+        <button class="btn btn-gold" onclick="runSimulation()">Run simulation</button>
+      </div>
+      <div class="card card-pad" style="margin-top:18px;">
+        <div class="card-title" style="margin-bottom:10px;">Hypothetical roadmap &amp; results</div>
+        <div class="empty-state" id="sim-empty">
+          <div class="empty-icon">📈</div>
+          <h4>No simulation run yet</h4>
+          <p>Select a strategy and run a simulation to preview a hypothetical roadmap and projected outcomes for each heir.</p>
+        </div>
+        <div class="hidden" id="sim-filled">
+          <div class="grid grid-3">
+            <div class="card card-pad" style="box-shadow:none;"><div class="card-sub">Projected outcome</div><h3 style="font-size:22px; margin-top:6px;">—</h3></div>
+            <div class="card card-pad" style="box-shadow:none;"><div class="card-sub">Tax exposure estimate</div><h3 style="font-size:22px; margin-top:6px;">—</h3></div>
+            <div class="card card-pad" style="box-shadow:none;"><div class="card-sub">Distribution timeline</div><h3 style="font-size:22px; margin-top:6px;">—</h3></div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:14px;" onclick="goPage('parent','p-legacy')">Finalize in Legacy Planner</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFESSIONAL COORDINATION HUB -->
+    <div class="page" id="p-hub">
+      <div class="page-intro"><p>A running checklist of the legal documents, accounts, and professional contacts tied to your estate, with recommendations based on how current each item is.</p></div>
+      <div class="card card-pad">
+        <div class="card-title" style="margin-bottom:6px;">Legal documents</div>
+        <table>
+          <thead><tr><th>Document</th><th>Status</th><th>Last updated</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>Will</td><td><span class="badge badge-neutral">Not started</span></td><td>—</td><td><button class="btn btn-secondary btn-sm">Upload</button></td></tr>
+            <tr><td>Trust</td><td><span class="badge badge-neutral">Not started</span></td><td>—</td><td><button class="btn btn-secondary btn-sm">Upload</button></td></tr>
+            <tr><td>Power of attorney</td><td><span class="badge badge-neutral">Not started</span></td><td>—</td><td><button class="btn btn-secondary btn-sm">Upload</button></td></tr>
+            <tr><td>Healthcare directive</td><td><span class="badge badge-neutral">Not started</span></td><td>—</td><td><button class="btn btn-secondary btn-sm">Upload</button></td></tr>
+            <tr><td>Beneficiary forms</td><td><span class="badge badge-neutral">Not started</span></td><td>—</td><td><button class="btn btn-secondary btn-sm">Upload</button></td></tr>
+            <tr><td>Insurance policies</td><td><span class="badge badge-neutral">Not started</span></td><td>—</td><td><button class="btn btn-secondary btn-sm">Upload</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="grid grid-2" style="margin-top:18px;">
+        <div class="card card-pad">
+          <div class="card-head"><div class="card-title">Brokerage &amp; investment accounts</div></div>
+          <div class="empty-state">
+            <div class="empty-icon">⇄</div>
+            <h4>No brokerage account connected</h4>
+            <p>Connect an online brokerage to pull in holdings, markets invested in, and related jurisdictional boundaries.</p>
+            <button class="btn btn-primary btn-sm">Connect brokerage account</button>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-head"><div class="card-title">Retirement accounts</div></div>
+          <div class="empty-state">
+            <div class="empty-icon">◎</div>
+            <h4>No retirement account connected</h4>
+            <p>Connect 401(k) and other retirement accounts to track related documents and beneficiary rules.</p>
+            <button class="btn btn-primary btn-sm">Connect retirement account</button>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top:18px;">
+        <div class="card card-pad">
+          <div class="card-head"><div class="card-title">Professional contacts</div></div>
+          <div class="empty-state">
+            <div class="empty-icon">☎</div>
+            <h4>No contacts added</h4>
+            <p>Add your estate attorney, financial advisor, or accountant to keep them linked to this checklist.</p>
+            <button class="btn btn-secondary btn-sm">Add contact</button>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-head"><div class="card-title">Timeline monitoring</div></div>
+          <div class="empty-state">
+            <div class="empty-icon">◷</div>
+            <h4>No major life events detected</h4>
+            <p>Report events like a new child or marriage — Vantage AI will flag when an estate plan review may be recommended.</p>
+            <button class="btn btn-secondary btn-sm">Report a life event</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPERVISING PAGE -->
+    <div class="page" id="p-supervise">
+      <div class="page-intro"><p>Every heir dashboard linked to your account shows up here, with engagement and financial literacy statistics so you can recommend content and set goals.</p></div>
+      <div class="card card-pad">
+        <div class="empty-state" style="padding:50px 20px;">
+          <div class="empty-icon">＋</div>
+          <h4>No heir accounts linked yet</h4>
+          <p>Invite an heir to link their dashboard to your account. Their engagement, financial literacy, and progress will appear here.</p>
+          <button class="btn btn-primary btn-sm">Invite heir</button>
+        </div>
+      </div>
+      <div class="grid grid-3" style="margin-top:18px;">
+        <div class="heir-card" style="opacity:.55;">
+          <div class="heir-card-top"><div class="heir-avatar">—</div><div><div style="font-weight:600; font-size:14px;">Heir name</div><div class="small muted">Not linked</div></div></div>
+          <div class="stat-mini"><span class="muted">Engagement score</span><span>—</span></div>
+          <div class="stat-mini"><span class="muted">Financial literacy</span><span>—</span></div>
+          <div class="flex gap-8" style="margin-top:12px;">
+            <button class="btn btn-secondary btn-sm" disabled>Recommend content</button>
+            <button class="btn btn-secondary btn-sm" disabled>Set goal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JURISDICTIONAL LOCATION -->
+    <div class="page" id="p-location">
+      <div class="page-intro"><p>Legal hurdles for inheritance vary by region. Vantage AI extracts location data from asset documents and brokerage holdings to flag jurisdictional and tax considerations for each asset.</p></div>
+      <div class="grid" style="grid-template-columns:1fr 1.4fr;">
+        <div class="card card-pad">
+          <div class="form-group"><label>Primary residence</label><select><option>Select your country / region —</option></select></div>
+          <div class="card-title small" style="margin-top:6px; margin-bottom:10px;">Locations tracked</div>
+          <div class="loc-tab"><div class="l">🏠 Primary residence</div><span class="badge badge-neutral">Not set</span></div>
+          <div class="empty-state" style="padding:22px;">
+            <div class="empty-icon">＋</div>
+            <h4>No asset locations found</h4>
+            <p>Connect a brokerage account or upload a property document to detect additional jurisdictions.</p>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-title" style="margin-bottom:10px;">Legal compliance summary</div>
+          <div class="empty-state">
+            <div class="empty-icon">⚖</div>
+            <h4>Select a location to view details</h4>
+            <p>Once a location is selected, this panel will summarize inheritance law, tax code considerations, and citizenship-based obligations (e.g. US citizens abroad remaining subject to IRS rules) for assets tied to that jurisdiction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- HEIR APP -->
+<!-- ============================================================ -->
+<div class="app-shell" id="app-heir">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="mark">V</div><div class="word">Vantage AI</div></div>
+    <div class="sidebar-role">Heir Dashboard</div>
+    <nav>
+      <a class="nav-link active" data-page="h-overview"><span class="ic">⌂</span>Overview</a>
+      <a class="nav-link" data-page="h-coach"><span class="ic">①</span>AI Financial Coach</a>
+      <a class="nav-link" data-page="h-simulator"><span class="ic">②</span>Wealth Simulator</a>
+      <a class="nav-link" data-page="h-roadmap"><span class="ic">③</span>Wealth Roadmap</a>
+      <a class="nav-link" data-page="h-docs"><span class="ic">④</span>Documentation</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a class="switch-role-btn" onclick="goLanding()">← Switch role / sign out</a>
+    </div>
+  </div>
+
+  <div class="main-col">
+    <div class="topbar">
+      <div><h2 id="h-page-title">Overview</h2><div class="sub" id="h-page-sub">Your personal finance &amp; inheritance readiness</div></div>
+      <div class="flex center gap-12"><span class="badge badge-neutral">Linked to parent account</span><div class="avatar">HR</div></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="h-overview">
+      <div class="grid grid-3" style="margin-bottom:20px;">
+        <div class="card card-pad"><div class="card-sub">Financial literacy score</div><h3 style="font-size:28px; margin-top:6px;">—</h3><div class="small muted" style="margin-top:6px;">Take a quiz to get scored</div></div>
+        <div class="card card-pad"><div class="card-sub">Wealth roadmap progress</div><h3 style="font-size:28px; margin-top:6px;">0%</h3><div class="small muted" style="margin-top:6px;">Roadmap not generated</div></div>
+        <div class="card card-pad"><div class="card-sub">Documents needed</div><h3 style="font-size:28px; margin-top:6px;">—</h3><div class="small muted" style="margin-top:6px;">Select your region to see requirements</div></div>
+      </div>
+      <div class="card card-pad">
+        <div class="card-head"><div><div class="card-title">Ask the AI financial coach</div><div class="card-sub">Get quick answers on trusts, taxes, and inheritance basics</div></div></div>
+        <div class="chat-suggestions">
+          <div class="chip" onclick="goPage('heir','h-coach')">"What is a trust?"</div>
+          <div class="chip" onclick="goPage('heir','h-coach')">"How much can I safely withdraw each year?"</div>
+          <div class="chip" onclick="goPage('heir','h-coach')">"What's a beneficiary designation?"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI FINANCIAL COACH -->
+    <div class="page" id="h-coach">
+      <div class="page-intro"><p>Ask questions about inheritance and personal finance. Responses can be personalized using information linked from your parent's account.</p></div>
+      <div class="chat-window">
+        <div class="chat-messages">
+          <div class="empty-icon" style="margin-bottom:6px;">💬</div>
+          <h4 style="font-size:14.5px; font-weight:600;">Ask your first question</h4>
+          <p class="muted small" style="max-width:340px; text-align:center; margin-top:4px;">Try one of these to start, or type your own question below.</p>
+          <div class="chat-suggestions">
+            <div class="chip">What is a trust?</div>
+            <div class="chip">How much can I safely withdraw each year?</div>
+            <div class="chip">What's the difference between a will and a trust?</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" placeholder="Ask a question about inheritance or finance...">
+          <button class="btn btn-primary btn-sm">Send</button>
+        </div>
+      </div>
+      <div class="card card-pad" style="margin-top:18px;">
+        <div class="card-head"><div><div class="card-title">Financial knowledge quizzes</div><div class="card-sub">Short quizzes assess your understanding of key financial frameworks</div></div><button class="btn btn-secondary btn-sm">Take a quiz</button></div>
+        <div class="empty-state"><div class="empty-icon">?</div><h4>No quizzes completed yet</h4><p>Your quiz history and knowledge assessment will be shown here.</p></div>
+      </div>
+    </div>
+
+    <!-- WEALTH SIMULATOR -->
+    <div class="page" id="h-simulator">
+      <div class="page-intro"><p>See hypothetical outcomes for what you could do with an inheritance, based on your broader financial situation.</p></div>
+      <div class="card card-pad">
+        <div class="card-title" style="margin-bottom:14px;">Compare scenarios</div>
+        <div class="grid grid-4">
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">📈</div><h5>Invest</h5><p>Grow the inheritance over time in the market.</p></div>
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">🛍</div><h5>Spend</h5><p>Use funds for near-term needs or goals.</p></div>
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">🏠</div><h5>Buy a house</h5><p>Put funds toward a home purchase.</p></div>
+          <div class="scenario-card" onclick="selectStrategy(this)"><div class="ic">🚀</div><h5>Start a business</h5><p>Use funds as startup capital.</p></div>
+        </div>
+        <div class="form-row" style="margin-top:20px;">
+          <div class="form-group"><label>Hypothetical inheritance amount</label><input type="text" placeholder="$ —"></div>
+          <div class="form-group"><label>Time horizon</label><input type="text" placeholder="e.g. 10 years —"></div>
+        </div>
+        <button class="btn btn-gold" onclick="runSimulation()">Compare scenarios</button>
+      </div>
+      <div class="card card-pad" style="margin-top:18px;">
+        <div class="card-title" style="margin-bottom:10px;">Results</div>
+        <div class="empty-state" id="sim-empty-2">
+          <div class="empty-icon">📊</div>
+          <h4>No comparison run yet</h4>
+          <p>Select one or more scenarios above and provide your financial details to see projected outcomes and recommendations.</p>
+        </div>
+        <div class="hidden" id="sim-filled-2">
+          <div class="grid grid-3">
+            <div class="card card-pad" style="box-shadow:none;"><div class="card-sub">Projected value</div><h3 style="font-size:22px; margin-top:6px;">—</h3></div>
+            <div class="card card-pad" style="box-shadow:none;"><div class="card-sub">Risk level</div><h3 style="font-size:22px; margin-top:6px;">—</h3></div>
+            <div class="card card-pad" style="box-shadow:none;"><div class="card-sub">Recommendation</div><h3 style="font-size:22px; margin-top:6px;">—</h3></div>
+          </div>
+          <button class="btn btn-secondary btn-sm" style="margin-top:14px;" onclick="goPage('heir','h-roadmap')">Send to Wealth Roadmap</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEALTH ROADMAP -->
+    <div class="page" id="h-roadmap">
+      <div class="page-intro"><p>A long-term plan built from your Wealth Simulator results and your own input, organized by life stage.</p></div>
+      <div class="card card-pad">
+        <div class="card-head"><div><div class="card-title">Your personalized roadmap</div><div class="card-sub">Example structure — generate yours to replace these placeholders</div></div><button class="btn btn-primary btn-sm">Generate roadmap</button></div>
+        <div class="timeline">
+          <div class="t-item"><div class="t-age">Age 25</div><div class="t-body muted small">Emergency fund · Retirement contributions · Basic investing — not yet generated</div></div>
+          <div class="t-item"><div class="t-age">Age 35</div><div class="t-body muted small">Home ownership · Tax optimization — not yet generated</div></div>
+          <div class="t-item"><div class="t-age">Age 50</div><div class="t-body muted small">Retirement planning — not yet generated</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTATION -->
+    <div class="page" id="h-docs">
+      <div class="page-intro"><p>A to-do list of legal documents you'll need, based on your country and region.</p></div>
+      <div class="card card-pad">
+        <div class="form-group" style="max-width:320px;"><label>Your region</label><select><option>Select your country / region —</option></select></div>
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <h4>Select your region to see requirements</h4>
+          <p>Vantage AI will generate an up-to-date checklist of the legal documents required for your situation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- WEALTH MANAGER APP -->
+<!-- ============================================================ -->
+<div class="app-shell" id="app-manager">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="mark">V</div><div class="word">Vantage AI</div></div>
+    <div class="sidebar-role">Wealth Manager</div>
+    <nav>
+      <a class="nav-link active" data-page="m-overview"><span class="ic">⌂</span>Client Overview</a>
+      <a class="nav-link" data-page="m-parents"><span class="ic">◆</span>Parent Accounts</a>
+      <a class="nav-link" data-page="m-heirs"><span class="ic">◇</span>Heir Accounts</a>
+      <a class="nav-link" data-page="m-alerts"><span class="ic">!</span>Alerts &amp; Interventions</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a class="switch-role-btn" onclick="goLanding()">← Switch role / sign out</a>
+    </div>
+  </div>
+
+  <div class="main-col">
+    <div class="topbar">
+      <div><h2 id="m-page-title">Client Overview</h2><div class="sub" id="m-page-sub">Track engagement across household accounts</div></div>
+      <div class="flex center gap-12"><button class="btn btn-secondary btn-sm">Add client</button><div class="avatar">WM</div></div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="m-overview">
+      <div class="grid grid-4" style="margin-bottom:20px;">
+        <div class="card card-pad"><div class="card-sub">Total households</div><h3 style="font-size:28px; margin-top:6px;">0</h3></div>
+        <div class="card card-pad"><div class="card-sub">Active alerts</div><h3 style="font-size:28px; margin-top:6px;">0</h3></div>
+        <div class="card card-pad"><div class="card-sub">Avg. readiness score</div><h3 style="font-size:28px; margin-top:6px;">—</h3></div>
+        <div class="card card-pad"><div class="card-sub">Heirs with low engagement</div><h3 style="font-size:28px; margin-top:6px;">0</h3></div>
+      </div>
+      <div class="card card-pad">
+        <div class="card-head"><div><div class="card-title">Client households</div><div class="card-sub">Parent and heir accounts under management</div></div><button class="btn btn-primary btn-sm">Add client</button></div>
+        <table style="margin-bottom:10px;">
+          <thead><tr><th>Household</th><th>Parent engagement</th><th>Heir engagement</th><th>Readiness score</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty-state">
+          <div class="empty-icon">＋</div>
+          <h4>No clients added yet</h4>
+          <p>Invite parent and heir accounts so you can track engagement and readiness across each household.</p>
+          <button class="btn btn-primary btn-sm">Add your first client</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARENT ACCOUNTS -->
+    <div class="page" id="m-parents">
+      <div class="page-intro"><p>Readiness scores, document status, and legacy planning progress for every parent account you manage.</p></div>
+      <div class="card card-pad">
+        <div class="empty-state" style="padding:50px 20px;">
+          <div class="empty-icon">◆</div>
+          <h4>No parent accounts linked</h4>
+          <p>Once clients are added, their readiness scores and document status will be listed here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEIR ACCOUNTS -->
+    <div class="page" id="m-heirs">
+      <div class="page-intro"><p>Engagement, financial literacy, and wealth roadmap progress for every heir account you manage.</p></div>
+      <div class="card card-pad">
+        <div class="empty-state" style="padding:50px 20px;">
+          <div class="empty-icon">◇</div>
+          <h4>No heir accounts linked</h4>
+          <p>Once heirs are linked, their engagement and financial literacy scores will be listed here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTS -->
+    <div class="page" id="m-alerts">
+      <div class="page-intro"><p>Vantage AI flags households where engagement is imbalanced — for example, an active parent account paired with an inactive heir dashboard — so you can step in with the right support.</p></div>
+      <div class="card card-pad">
+        <div class="empty-state" style="padding:50px 20px;">
+          <div class="empty-icon">!</div>
+          <h4>No alerts at this time</h4>
+          <p>Example of what appears here: "Heir dashboard shows no recent activity while the linked parent account is actively engaged — consider reaching out." Alerts like this will populate automatically as household data connects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---------- Navigation between landing + apps ----------
+  function enterApp(role){
+    document.getElementById('landing').classList.add('hide');
+    document.querySelectorAll('.app-shell').forEach(el=>el.classList.remove('active'));
+    document.getElementById('app-'+role).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  function goLanding(){
+    document.querySelectorAll('.app-shell').forEach(el=>el.classList.remove('active'));
+    document.getElementById('landing').classList.remove('hide');
+    window.scrollTo(0,0);
+  }
+  function scrollToPicker(){ document.getElementById('role-picker').scrollIntoView({behavior:'smooth'}); }
+  function scrollToStrip(){ document.getElementById('feature-strip').scrollIntoView({behavior:'smooth'}); }
+
+  // ---------- Sidebar nav within each app ----------
+  document.querySelectorAll('.app-shell').forEach(shell=>{
+    shell.querySelectorAll('.nav-link').forEach(link=>{
+      link.addEventListener('click', ()=>{
+        const pageId = link.getAttribute('data-page');
+        shell.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+        shell.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+        const target = document.getElementById(pageId);
+        if(target) target.classList.add('active');
+        const titleEl = shell.querySelector('h2[id$="-page-title"]');
+        const subEl = shell.querySelector('.sub[id$="-page-sub"]');
+        if(titleEl) titleEl.textContent = link.textContent.trim();
+        shell.querySelector('.main-col').scrollTo(0,0);
+        window.scrollTo(0,0);
+      });
+    });
+  });
+
+  function goPage(role, pageId){
+    const shell = document.getElementById('app-'+role);
+    const link = shell.querySelector('[data-page="'+pageId+'"]');
+    if(link) link.click();
+  }
+
+  // ---------- Tab switching (Legacy Planner, etc.) ----------
+  document.querySelectorAll('.tabbar').forEach(bar=>{
+    bar.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const tabId = btn.getAttribute('data-tab');
+        bar.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const panelGroup = bar.parentElement;
+        panelGroup.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if(target) target.classList.add('active');
+      });
+    });
+  });
+
+  // ---------- Scenario / strategy card selection ----------
+  function selectStrategy(card){
+    const siblings = card.parentElement.querySelectorAll('.scenario-card');
+    siblings.forEach(s=>s.classList.remove('selected'));
+    card.classList.add('selected');
+  }
+
+  // ---------- Demo-only interactive toggles (structure only, no fabricated data) ----------
+  function runAssessment(){
+    document.getElementById('readiness-empty').classList.add('hidden');
+    document.getElementById('readiness-filled').classList.remove('hidden');
+  }
+  function runSimulation(){
+    ['sim-empty','sim-empty-2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
+    ['sim-filled','sim-filled-2'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.remove('hidden'); });
+  }
+</script>
+
+</body>
+</html>
