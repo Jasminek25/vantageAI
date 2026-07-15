@@ -1,0 +1,83 @@
+# ---------------------------------------------------------------------------
+# SECRETS
+# ---------------------------------------------------------------------------
+# NOTE: a bare `.env` rule matches ONLY a file literally named ".env".
+# This project's key file may be GemAPI.env / GeminiAPI.env / anything.env,
+# which that rule does NOT catch. These globs are deliberate — do not
+# "simplify" them back to `.env`.
+#   *.env      -> GemAPI.env, GeminiAPI.env, prod.env
+#   .env.*     -> .env.local, .env.production
+#   *.env.*    -> keys.env.local, staging.env.bak
+# The negations (which MUST come last) re-include the committable templates.
+*.env
+.env
+.env.*
+*.env.*
+!*.env.example
+!.env.example
+
+# ---------------------------------------------------------------------------
+# USER FINANCIAL DATA — never belongs in a shared repo
+# ---------------------------------------------------------------------------
+# Inherited statements, wills, brokerage PDFs.
+# `data/*` not `data/` — git cannot re-include a file inside a fully excluded
+# directory, so `data/` would swallow the .gitkeep and the folder would vanish
+# on clone.
+data/*
+!data/.gitkeep
+
+# The vector store. Chroma persists the ORIGINAL CHUNK TEXT alongside the
+# embeddings, so committing this leaks the documents themselves, not just vectors.
+chroma_store/
+
+# Portfolio: salary, debts, balances, holdings.
+store/
+*portfolio.json
+*.corrupt.json
+
+# Local model cache
+.cache/
+models/
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------------------------------
+# ARCHIVES — a zip bypasses every rule above
+# ---------------------------------------------------------------------------
+# .gitignore matches PATHS, not archive contents. A zip of the working tree
+# named anything.zip is not caught by `*.env` or `data/*`, and CI's `git grep`
+# skips it as binary — so a key or a statement PDF inside it sails straight
+# into the public repo. Ship source, not snapshots.
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar

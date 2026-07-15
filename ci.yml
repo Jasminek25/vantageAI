@@ -1,0 +1,38 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fails the build if a secret or user financial data was ever committed.
+      - name: Block committed secrets and personal data
+        run: |
+          set -e
+          # Matches GemAPI.env, .env, .env.local, keys.env.bak — not *.example.
+          if git ls-files | grep -Ei '(^|/)[^/]*\.env(\.[^/]*)?$' | grep -vE '\.example$'; then
+            echo "::error::A .env file is tracked. Remove it and rotate the key."; exit 1
+          fi
+          # Archives can smuggle a key or a statement past .gitignore and past
+          # the git grep below, which skips binary files.
+          if git ls-files | grep -Ei '\.(zip|tar|tar\.gz|tgz|7z|rar)$'; then
+            echo "::error::An archive is tracked. Commit source, not snapshots."; exit 1
+          fi
+          if git ls-files | grep -E '^(data/.+\.pdf|store/|chroma_store/)'; then
+            echo "::error::User financial data is tracked."; exit 1
+          fi
+          if git grep -nEI 'AIza[0-9A-Za-z_-]{30,}' -- . ':!*.yml'; then
+            echo "::error::A Google API key literal is present."; exit 1
+          fi
+          echo "No secrets or personal data tracked."
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      # Smoke tests are fully stubbed: no key, no network, no Gemini spend.
+      - run: python test_smoke.py
