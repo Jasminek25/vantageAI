@@ -1,13 +1,16 @@
 {
-  "name": "heirline-parent-dashboard",
-  "version": "0.7.0",
+  "name": "vantage-ai-integrated-demo",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/dev-full.mjs",
+    "dev:web": "vite",
+    "dev:api": "python3 api_server.py",
     "build": "vite build",
     "preview": "vite preview",
-    "validate": "node scripts/validate-demo-data.mjs"
+    "validate": "node scripts/validate-demo-data.mjs",
+    "test:api": "python3 -m unittest -v test_api_server.py"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

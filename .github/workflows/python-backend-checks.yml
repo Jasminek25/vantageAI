@@ -1,0 +1,47 @@
+name: Python backend checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guard-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-ci.txt
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-ci.txt
+      - name: Block committed secrets and personal financial data
+        shell: bash
+        run: |
+          set -e
+          if git ls-files | grep -Ei '(^|/)[^/]*\.env(\.[^/]*)?$' | grep -vE '\.example$'; then
+            echo "::error::A .env file is tracked. Remove it and rotate the key."
+            exit 1
+          fi
+          if git ls-files | grep -Ei '\.(zip|tar|tar\.gz|tgz|7z|rar)$'; then
+            echo "::error::An archive is tracked. Commit source, not snapshots."
+            exit 1
+          fi
+          if git ls-files | grep -E '^(data/.+\.pdf|store/|chroma_store/)'; then
+            echo "::error::User financial data is tracked."
+            exit 1
+          fi
+          if git grep -nEI 'AIza[0-9A-Za-z_-]{30,}' -- . ':!*.yml'; then
+            echo "::error::A Google API key literal is present."
+            exit 1
+          fi
+      - name: Run Aayush backend smoke tests
+        run: python test_smoke.py
+      - name: Run integration API tests
+        run: python -m unittest -v test_api_server.py

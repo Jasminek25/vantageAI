@@ -6,6 +6,38 @@ import {
   saveReadinessAssessment,
   saveTransferScenario
 } from './services/parentApi.js';
+import LandingPage from './components/LandingPage.jsx';
+import HeirDashboard from './components/HeirDashboard.jsx';
+import FutureFeature from './components/FutureFeature.jsx';
+
+const validRoles = new Set(['landing', 'parent', 'heir', 'manager']);
+
+function roleFromHash() {
+  const role = window.location.hash.replace('#', '') || 'landing';
+  return validRoles.has(role) ? role : 'landing';
+}
+
+export default function App() {
+  const [role, setRole] = useState(roleFromHash);
+
+  useEffect(() => {
+    const syncRole = () => setRole(roleFromHash());
+    window.addEventListener('hashchange', syncRole);
+    return () => window.removeEventListener('hashchange', syncRole);
+  }, []);
+
+  function chooseRole(nextRole) {
+    const safeRole = validRoles.has(nextRole) ? nextRole : 'landing';
+    window.location.hash = safeRole === 'landing' ? '' : safeRole;
+    setRole(safeRole);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (role === 'parent') return <ParentDashboard onSwitchRole={() => chooseRole('landing')} />;
+  if (role === 'heir') return <HeirDashboard onSwitchRole={() => chooseRole('landing')} />;
+  if (role === 'manager') return <FutureFeature onBack={() => chooseRole('landing')} />;
+  return <LandingPage onChooseRole={chooseRole} />;
+}
 
 const features = [
   { id: 'home', short: 'Home', label: 'Parent home', number: '00', glyph: '⌂' },
@@ -41,7 +73,7 @@ function money(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
 }
 
-export default function App() {
+function ParentDashboard({ onSwitchRole }) {
   const [view, setView] = useState('home');
   const [data, setData] = useState(null);
   const [mobileNav, setMobileNav] = useState(false);
@@ -91,7 +123,7 @@ export default function App() {
         <header className="topbar">
           <button className="menu-button" type="button" aria-label="Open navigation" onClick={() => setMobileNav(true)}>☰</button>
           <div className="breadcrumb"><span>Parent dashboard</span><i>/</i><strong>{activeFeature.label}</strong></div>
-          <div className="top-actions"><span className="demo-badge"><i /> FICTIONAL DEMO DATA</span><button className="outline-button" type="button" onClick={() => navigate('home')}>Feature guide</button><button className="primary-button compact" type="button" onClick={() => notify('Presentation mode ready')}>Present demo ↗</button></div>
+          <div className="top-actions"><span className="demo-badge"><i /> FICTIONAL DEMO DATA</span><button className="outline-button" type="button" onClick={onSwitchRole}>Switch role</button><button className="outline-button" type="button" onClick={() => navigate('home')}>Feature guide</button><button className="primary-button compact" type="button" onClick={() => notify('Presentation mode ready')}>Present demo ↗</button></div>
         </header>
 
         <div className="page-stage">

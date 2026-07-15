@@ -8,7 +8,7 @@ This implementation follows the team's Slack decisions:
 - **Aayush:** heir dashboard and server-side Gemini support for the AI financial coach
 - **Jasmine:** shared repository and broader product website direction
 
-The repository contained only its initial README when this branch was created. Jasmine's earlier Heirline HTML was available in Slack and informed this branch's cream, pine, brass, rust, serif, and ledger-style visual language. Aayush's implementation files were not yet present in the shared repository, so the routes below are an explicit proposed contract—not a claim about code that has already been merged.
+The parent dashboard was originally built on its own branch before Jasmine's shared frontend and Aayush's Python backend were merged. That original branch and PR remain the attribution record. The current integration keeps the parent module intact inside one role-based React shell.
 
 ## Feature map
 
@@ -21,9 +21,9 @@ The repository contained only its initial README when this branch was created. J
 | 5 | Family Overview | Engagement summary and learning-goal assignment | Aayush's heir service and consent-filtered events |
 | 6 | Jurisdiction Map | Asset locations and professional-review questions | Verified location extraction and jurisdiction-specific counsel content |
 
-## Proposed parent API boundary
+## Parent API boundary
 
-The frontend currently uses safe mock responses. Setting `VITE_API_BASE_URL` enables these proposed routes:
+The frontend uses safe mock responses when no API is running. `npm run dev` sets `VITE_API_BASE_URL` and enables these routes through `api_server.py`:
 
 ```text
 GET  /api/parent/dashboard
@@ -82,10 +82,12 @@ Private AI-coach messages, quiz answers, passwords, financial decisions, and Gem
 - [x] Demo data passes automated structural validation.
 - [x] Production build compiles successfully.
 
-## Remaining integration work
+## Integration status
 
-1. Aayush adds or shares the heir-dashboard/backend branch.
-2. Team agrees on route and payload names; update only `parentApi.js` if names change.
-3. Jasmine merges the parent and heir navigation into the shared website shell.
-4. Add authenticated test accounts and consent rules before any real cross-dashboard sync.
-5. Replace fictional data only after the privacy/security design is reviewed.
+- [x] Jasmine's landing-page direction is represented in the shared role selector.
+- [x] The parent dashboard opens as a distinct, intact workstream.
+- [x] Aayush's backend concepts have a dedicated heir web experience and JSON adapter.
+- [x] The Python workflow runs from the correct GitHub Actions directory.
+- [x] The Wealth Manager dashboard is labeled as future scope.
+- [ ] Add authenticated accounts and enforce consent server-side before real data is used.
+- [ ] Replace fictional content only after privacy, security, legal, and professional review.

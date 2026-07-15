@@ -1,0 +1,33 @@
+{
+  "profile": {
+    "name": "Maya Rivera",
+    "relationship": "Daughter",
+    "state": "California",
+    "learningGoal": "Understand trust distributions"
+  },
+  "summary": {
+    "literacy": 76,
+    "roadmap": 42,
+    "documentsComplete": 3,
+    "documentsTotal": 6,
+    "assetsLogged": 3
+  },
+  "assets": [
+    { "id": "cash", "name": "Inherited cash", "category": "Cash", "value": 85000, "liquidity": "Liquid" },
+    { "id": "brokerage", "name": "Brokerage account", "category": "Investments", "value": 142000, "liquidity": "Liquid" },
+    { "id": "home-interest", "name": "Family property interest", "category": "Real estate", "value": 210000, "liquidity": "Illiquid" }
+  ],
+  "documents": [
+    { "id": "death-certificate", "name": "Certified death certificate", "category": "Identity", "status": "complete" },
+    { "id": "identification", "name": "Government identification", "category": "Identity", "status": "complete" },
+    { "id": "trust-notice", "name": "Trust or beneficiary notice", "category": "Estate", "status": "complete" },
+    { "id": "account-claim", "name": "Financial account claim forms", "category": "Accounts", "status": "review" },
+    { "id": "tax-id", "name": "Estate or trust tax ID confirmation", "category": "Tax", "status": "review" },
+    { "id": "professional-review", "name": "Attorney / tax professional review", "category": "Professional", "status": "missing" }
+  ],
+  "coachPrompts": [
+    "What should I do before moving inherited money?",
+    "How does a trust distribution work?",
+    "What documents should I bring to an advisor?"
+  ]
+}
