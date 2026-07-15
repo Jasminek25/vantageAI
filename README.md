@@ -1,10 +1,56 @@
-# Inheritance Assistant
+# Heirline — Shared Inheritance Planning Prototype
+
+Heirline is the team's shared web application for helping families prepare for
+inheritance conversations. The repository keeps each teammate's contribution
+explicit while providing one integration point for the final demo.
+
+## Team workstreams
+
+- **Jasmine — shared website:** landing page, product framing, and role selector
+  in `vantage-ai-frontend.html`.
+- **Vedang — parent dashboard:** the React application in `src/`, including the
+  parent-facing product flows and the frontend API adapter.
+- **Aayush — heir dashboard backend:** the Python inheritance assistant,
+  financial planner, asset manager, and document tracker.
+
+## Vedang's Parent Dashboard
+
+The parent experience is a demo-ready React application with six connected
+features:
+
+1. **Inheritance Readiness Assessment** — scores plan completeness and explains
+   the next gaps.
+2. **Wealth Transfer Simulator** — compares equal, trust, and staggered
+   hypothetical structures.
+3. **Professional Coordination Hub** — tracks documents, review dates, advisors,
+   and milestones.
+4. **Legacy Planner** — organizes family values, goals, instructions, and a
+   living roadmap.
+5. **Family Overview** — shows consent-based heir engagement and assigns learning
+   goals.
+6. **Jurisdiction Map** — groups assets by location and flags questions for
+   professional review.
+
+Run and verify the web application:
+
+```bash
+npm install
+npm run dev
+npm run validate
+npm run build
+```
+
+The parent dashboard's ownership, privacy boundary, proposed API routes, and
+integration contract are documented in
+[`docs/PARENT_DASHBOARD_SCOPE.md`](docs/PARENT_DASHBOARD_SCOPE.md).
+
+## Aayush's Heir Dashboard Backend
 
 Gemini-powered tools for inheritors: an auto-routed Q&A assistant over your own
 PDFs, a filing-document checklist, an asset log with live valuations, and a
 financial planner.
 
-## Setup
+### Setup
 
 ```bash
 git clone <repo> && cd <repo>
@@ -18,7 +64,7 @@ python cli.py doctor                 # verifies key, paths, deps
 `doctor` prints the exact env file it loaded, so a naming mismatch is visible
 in one command instead of being guessed at.
 
-### How the key is loaded
+#### How the key is loaded
 
 **The filename is discovered, not hardcoded.** A single hardcoded name is a
 silent-failure trap: `load_dotenv()` on a path that doesn't exist is a no-op, so
@@ -36,7 +82,7 @@ and `GOOGLE_API_KEY` are all accepted. The key is never logged, never returned,
 and never interpolated into an error message — `key_fingerprint()` returns only
 the last 4 characters for display.
 
-## Layers
+### Layers
 
 ```
 config.py          absolute paths, env overrides, logging setup
@@ -60,7 +106,7 @@ test_smoke.py      offline tests: no key, no network, no spend
 data or yield chunks; the caller decides how to display it. `cli.py` is the
 reference caller. Your UI is the next one, and it imports nothing from `cli.py`.
 
-## CLI
+### CLI
 
 ```bash
 python cli.py                          # interactive chat (old main.py behaviour)
@@ -79,7 +125,7 @@ python cli.py plan --metrics-only      # deterministic numbers, zero tokens
 python test_smoke.py                   # offline tests
 ```
 
-## Wiring a UI
+### Wiring a UI
 
 Flask + SSE streaming:
 
@@ -127,7 +173,7 @@ if q:
     st.write_stream(a.stream_ask(q, force_route=route))
 ```
 
-## Notes for the frontend
+### Notes for the frontend
 
 - `Assistant.ask()` **never raises** for expected failures — check
   `result.error` and render it. `MissingAPIKey` is catchable if you'd rather
@@ -142,7 +188,7 @@ if q:
 - First `retrieve()` in a process loads the embedding model (a few seconds).
   Call `engine.ingest()` at app startup to move that cost off the first request.
 
-## Known limits
+### Known limits
 
 - The vector store is single-tenant. `PortfolioStore` already keys by `user_id`,
   but the Chroma collection does not — before multi-user, add a `user_id`
@@ -151,7 +197,7 @@ if q:
   a task queue when you have real users.
 - Scanned PDFs yield no text. `report.needs_ocr` names them; run `ocrmypdf` first.
 
-## Security
+### Security
 
 Never commit: `GemAPI.env`, `data/` (your statements), `store/portfolio.json`
 (salary, debts), `chroma_store/` (Chroma persists the original chunk text, so it
