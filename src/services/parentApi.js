@@ -1,4 +1,5 @@
 import demoData from '../data/parent-demo.json';
+import { getSharedFamilyContext, saveSharedFamilyContext } from './sharedPlan.js';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 const demoResponse = value => new Promise(resolve => window.setTimeout(() => resolve(structuredClone(value)), 120));
@@ -36,7 +37,13 @@ export async function saveTransferScenario(payload) {
 }
 
 export async function assignHeirLearningGoal(heirId, resource) {
-  return (await request(`/parent/heirs/${heirId}/recommendations`, { method: 'POST', body: JSON.stringify({ resource }) })) || demoResponse({ saved: true, heirId, resource, delivery: 'mock only' });
+  const previous = getSharedFamilyContext() || {};
+  saveSharedFamilyContext({
+    ...previous,
+    recipient: heirId === 'maya' ? 'Maya Rivera' : heirId,
+    learningGoal: resource
+  });
+  return (await request(`/parent/heirs/${heirId}/recommendations`, { method: 'POST', body: JSON.stringify({ resource }) })) || demoResponse({ saved: true, heirId, resource, delivery: 'saved on this device' });
 }
 
 export const integrationMode = API_BASE_URL ? 'connected backend' : 'safe demo data';

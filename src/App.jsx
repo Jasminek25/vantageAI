@@ -8,6 +8,8 @@ import {
 import LandingPage from './components/LandingPage.jsx';
 import HeirDashboard from './components/HeirDashboard.jsx';
 import FutureFeature from './components/FutureFeature.jsx';
+import { trackEvent } from './services/analytics.js';
+import { getSavedReadiness, saveReadinessLocally, saveSharedFamilyContext } from './services/sharedPlan.js';
 
 const validRoles = new Set(['landing', 'parent', 'heir', 'manager']);
 
@@ -24,6 +26,8 @@ export default function App() {
     window.addEventListener('hashchange', syncRole);
     return () => window.removeEventListener('hashchange', syncRole);
   }, []);
+
+  useEffect(() => { trackEvent('page_view', { experience: role }); }, [role]);
 
   function chooseRole(nextRole) {
     const safeRole = validRoles.has(nextRole) ? nextRole : 'landing';
@@ -43,7 +47,7 @@ const features = [
   { id: 'readiness', short: 'Readiness', label: 'Readiness assessment', number: '01', glyph: '✓' },
   { id: 'transfer', short: 'Transfer lab', label: 'Wealth transfer simulator', number: '02', glyph: '⇄' },
   { id: 'documents', short: 'Coordination', label: 'Professional coordination', number: '03', glyph: '▤' },
-  { id: 'legacy', short: 'Legacy plan', label: 'Legacy planner', number: '04', glyph: '✦' },
+  { id: 'legacy', short: 'Legacy plan', label: 'Parent legacy plan', number: '04', glyph: '✦' },
   { id: 'family', short: 'Family', label: 'Family overview', number: '05', glyph: '◇' },
   { id: 'jurisdictions', short: 'Locations', label: 'Jurisdiction map', number: '06', glyph: '◎' }
 ];
@@ -52,16 +56,16 @@ const featureDescriptions = {
   readiness: 'Review plan completeness, calculate a transparent score, and turn gaps into next actions.',
   transfer: 'Compare hypothetical equal, trust, and staggered distribution structures before professional review.',
   documents: 'Keep documents, review dates, milestones, and professional contacts in one coordinated checklist.',
-  legacy: 'Document family values, goals, instructions, educational resources, and a living roadmap.',
+  legacy: 'Clarify what the family is passing on, why it matters, and which approved context heirs should receive.',
   family: 'See consent-based heir engagement and assign learning goals to the connected heir experience.',
   jurisdictions: 'Group assets by location and surface cross-border questions for qualified professionals.'
 };
 
 const readinessQuestions = [
-  { prompt: 'Is your signed will current and accessible?', help: 'A current signed will establishes core instructions.', options: [['Yes, reviewed recently', 18], ['On file, but old', 9], ['No or unsure', 0]] },
-  { prompt: 'When was your trust or estate plan last reviewed?', help: 'Life events and law changes can make old plans inaccurate.', options: [['Within 3 years', 18], ['More than 3 years ago', 8], ['Never / no trust', 2]] },
-  { prompt: 'Are beneficiary forms confirmed across key accounts?', help: 'Account forms can override instructions in a will.', options: [['All confirmed', 18], ['Some need review', 8], ['Not confirmed', 0]] },
-  { prompt: 'Do you have a signed healthcare directive?', help: 'This records wishes for medical decisions and agents.', options: [['Yes', 18], ['Draft only', 8], ['No', 0]] }
+  { prompt: 'Is your signed will current and accessible?', help: 'A current signed will establishes core instructions.', action: 'Update or locate the signed will', owner: 'Estate attorney', options: [['Yes, reviewed recently', 18], ['On file, but old', 9], ['No or unsure', 0]] },
+  { prompt: 'When was your trust or estate plan last reviewed?', help: 'Life events and law changes can make old plans inaccurate.', action: 'Schedule an estate-plan review', owner: 'Estate attorney', options: [['Within 3 years', 18], ['More than 3 years ago', 8], ['Never / no trust', 2]] },
+  { prompt: 'Are beneficiary forms confirmed across key accounts?', help: 'Account forms can override instructions in a will.', action: 'Confirm beneficiary designations', owner: 'Wealth advisor', options: [['All confirmed', 18], ['Some need review', 8], ['Not confirmed', 0]] },
+  { prompt: 'Do you have a signed healthcare directive?', help: 'This records wishes for medical decisions and agents.', action: 'Complete a healthcare directive', owner: 'Estate attorney', options: [['Yes', 18], ['Draft only', 8], ['No', 0]] }
 ];
 
 function statusLabel(status) {
@@ -77,6 +81,7 @@ function ParentDashboard({ onSwitchRole }) {
   const [data, setData] = useState(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [notice, setNotice] = useState('');
+  const [readiness, setReadiness] = useState(getSavedReadiness);
 
   useEffect(() => { getParentDashboard().then(setData); }, []);
 
@@ -126,8 +131,8 @@ function ParentDashboard({ onSwitchRole }) {
         </header>
 
         <div className="page-stage">
-          {view === 'home' && <Home data={data} onNavigate={navigate} />}
-          {view === 'readiness' && <Readiness data={data} notify={notify} />}
+          {view === 'home' && <Home data={data} readiness={readiness} onNavigate={navigate} />}
+          {view === 'readiness' && <Readiness data={data} stored={readiness} onSaved={setReadiness} notify={notify} />}
           {view === 'transfer' && <TransferLab data={data} notify={notify} />}
           {view === 'documents' && <CoordinationHub data={data} notify={notify} />}
           {view === 'legacy' && <LegacyPlanner notify={notify} />}
@@ -144,8 +149,9 @@ function PageIntro({ number, eyebrow, title, description, children }) {
   return <section className="page-intro"><div className="feature-number">{number}</div><div><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></div>{children && <div className="intro-actions">{children}</div>}</section>;
 }
 
-function Home({ data, onNavigate }) {
+function Home({ data, readiness, onNavigate }) {
   const current = data.documents.filter(item => item.status === 'complete').length;
+  const score = readiness?.score ?? 58;
   return (
     <div className="page home-page">
       <PageIntro number="00" eyebrow="PARENT DASHBOARD" title="One clear plan for everything you’re preparing to pass on." description="Organize your estate plan, compare transfer choices, coordinate professional reviews, and prepare your family for what comes next.">
@@ -155,7 +161,7 @@ function Home({ data, onNavigate }) {
       <section className="home-hero">
         <div className="readiness-summary">
           <p className="eyebrow light">FAMILY PLAN SNAPSHOT</p><h2>Readiness score</h2>
-          <div className="score-row"><div className="score-ring" style={{ '--score': '208.8deg' }}><strong>58</strong><small>OUT OF 100</small></div><div><span className="plan-state">Foundation in place</span><p>{current} of {data.documents.length} tracked documents are current. Three actions need attention before the next professional review.</p><button type="button" onClick={() => onNavigate('readiness')}>Explain this score →</button></div></div>
+          <div className="score-row"><div className="score-ring" style={{ '--score': `${score * 3.6}deg` }}><strong>{score}</strong><small>OUT OF 100</small></div><div><span className="plan-state">{score >= 75 ? 'Strong foundation' : score >= 50 ? 'Foundation in place' : 'Important gaps found'}</span><p>{readiness ? `Your saved assessment identified ${readiness.actions.length} priority ${readiness.actions.length === 1 ? 'action' : 'actions'}.` : `${current} of ${data.documents.length} tracked documents are current. Run the assessment to create your personalized review list.`}</p><button type="button" onClick={() => onNavigate('readiness')}>{readiness ? 'Review saved result' : 'Calculate your score'} →</button></div></div>
         </div>
         <div className="priority-actions"><div className="card-heading"><div><p className="eyebrow">NEXT BEST ACTIONS</p><h3>What needs attention now</h3></div><span>3 OPEN</span></div><div className="action-list"><button type="button" onClick={() => onNavigate('documents')}><b>01</b><span><strong>Confirm beneficiary designations</strong><small>401(k) and insurance forms are unverified</small></span><em>High</em><i>→</i></button><button type="button" onClick={() => onNavigate('documents')}><b>02</b><span><strong>Review the family trust</strong><small>Last professional review was in 2016</small></span><em>Due</em><i>→</i></button><button type="button" onClick={() => onNavigate('documents')}><b>03</b><span><strong>Create healthcare directive</strong><small>No signed directive is on file</small></span><em>Missing</em><i>→</i></button></div></div>
       </section>
@@ -171,11 +177,12 @@ function Home({ data, onNavigate }) {
   );
 }
 
-function Readiness({ data, notify }) {
-  const [step, setStep] = useState(-1);
-  const [answers, setAnswers] = useState([]);
+function Readiness({ data, stored, onSaved, notify }) {
+  const [step, setStep] = useState(stored ? readinessQuestions.length : -1);
+  const [answers, setAnswers] = useState(stored?.answers || []);
   const score = answers.length ? Math.min(96, 20 + answers.reduce((sum, answer) => sum + answer.points, 0)) : 58;
   const complete = step === readinessQuestions.length;
+  const actions = complete ? readinessQuestions.flatMap((question, index) => (answers[index]?.points || 0) < 18 ? [{ title: question.action, owner: question.owner }] : []) : [];
 
   function start() { setAnswers([]); setStep(0); }
   async function answer(label, points) {
@@ -184,8 +191,12 @@ function Readiness({ data, notify }) {
     if (step === readinessQuestions.length - 1) {
       const nextScore = Math.min(96, 20 + next.reduce((sum, item) => sum + item.points, 0));
       setStep(readinessQuestions.length);
-      await saveReadinessAssessment({ answers: next, score: nextScore });
-      notify('Assessment saved to the demo plan');
+      const nextActions = readinessQuestions.flatMap((question, index) => next[index].points < 18 ? [{ title: question.action, owner: question.owner }] : []);
+      await saveReadinessAssessment({ answers: next, score: nextScore, actions: nextActions });
+      const saved = saveReadinessLocally({ answers: next, score: nextScore, actions: nextActions });
+      onSaved(saved);
+      trackEvent('readiness_completed', { score: nextScore, actionCount: nextActions.length });
+      notify('Assessment and action plan saved');
     } else setStep(step + 1);
   }
 
@@ -197,7 +208,7 @@ function Readiness({ data, notify }) {
         <article className="assessment-card">
           {step === -1 && <><p className="eyebrow">HOW IT WORKS</p><h2>Four questions turn uncertainty into a review list.</h2><p>Answer using the fictional sample family. The result updates the readiness score and generates clear next actions.</p><div className="assessment-steps"><div><span>1</span><p><strong>Answer</strong><small>Will, trust, beneficiaries, healthcare</small></p></div><div><span>2</span><p><strong>Score</strong><small>Transparent points, not a black box</small></p></div><div><span>3</span><p><strong>Act</strong><small>Review gaps with the right professional</small></p></div></div><button className="primary-button" type="button" onClick={start}>Begin assessment →</button></>}
           {step >= 0 && !complete && <><div className="progress-header"><span>QUESTION {step + 1} OF {readinessQuestions.length}</span><b>{Math.round(((step + 1) / readinessQuestions.length) * 100)}%</b></div><div className="progress-track"><i style={{ width: `${((step + 1) / readinessQuestions.length) * 100}%` }} /></div><p className="eyebrow">READINESS CHECK</p><h2>{readinessQuestions[step].prompt}</h2><p>{readinessQuestions[step].help}</p><div className="answer-list">{readinessQuestions[step].options.map(([label, points]) => <button type="button" key={label} onClick={() => answer(label, points)}>{label}<span>→</span></button>)}</div></>}
-          {complete && <><span className="complete-mark">✓</span><p className="eyebrow">ASSESSMENT COMPLETE</p><h2>Your updated score is {score}/100.</h2><p>The score now reflects the four answers. These are organizational prompts, not legal conclusions.</p><div className="result-actions"><div><b>1</b><span><strong>Confirm account beneficiaries</strong><small>Review with wealth advisor</small></span></div><div><b>2</b><span><strong>Schedule trust review</strong><small>Review with estate attorney</small></span></div><div><b>3</b><span><strong>Create healthcare directive</strong><small>Discuss and sign with counsel</small></span></div></div><button className="outline-button" type="button" onClick={start}>Retake assessment</button></>}
+          {complete && <><span className="complete-mark">✓</span><p className="eyebrow">ASSESSMENT SAVED</p><h2>Your readiness score is {score}/100.</h2><p>Your answers are saved on this device. The priorities below explain exactly what lowered the score and who should help review each item.</p><div className="result-actions">{actions.length ? actions.map((action, index) => <div key={action.title}><b>{index + 1}</b><span><strong>{action.title}</strong><small>Review with: {action.owner}</small></span></div>) : <div><b>✓</b><span><strong>No immediate gaps in these four areas</strong><small>Continue periodic professional reviews</small></span></div>}</div><button className="outline-button" type="button" onClick={start}>Retake assessment</button></>}
         </article>
       </section>
       <section className="document-snapshot"><div className="card-heading"><div><p className="eyebrow">EVIDENCE BEHIND THE SCORE</p><h3>Tracked plan items</h3></div><button type="button">Open coordination hub →</button></div><div className="document-mini-grid">{data.documents.map(item => <div key={item.id}><span className={`status-symbol ${item.status}`}>{item.status === 'complete' ? '✓' : item.status === 'missing' ? '×' : '!'}</span><p><strong>{item.name}</strong><small>{item.lastReviewed}</small></p><b className={`status-pill ${item.status}`}>{statusLabel(item.status)}</b></div>)}</div></section>
@@ -249,12 +260,24 @@ function CoordinationHub({ data, notify }) {
 function LegacyPlanner({ notify }) {
   const [values, setValues] = useState(['Education', 'Independence', 'Family stewardship']);
   const [goals, setGoals] = useState([true, false, false]);
+  const [instructions, setInstructions] = useState('Use the trust to support education, a first home, and long-term stability. Before any major withdrawal, meet with the family advisor and review how the decision affects the long-term plan.');
   const valueOptions = ['Education', 'Independence', 'Family stewardship', 'Entrepreneurship', 'Community giving', 'Long-term security'];
+  const goalOptions = ['Complete graduate degree without debt', 'Build a six-month emergency fund', 'Understand trust distribution rules'];
   function toggleValue(value) { setValues(list => list.includes(value) ? list.filter(item => item !== value) : [...list, value]); }
+  function sharePlan() {
+    saveSharedFamilyContext({
+      recipient: 'Maya Rivera',
+      purpose: values,
+      parentContext: instructions,
+      learningGoal: goalOptions.find((goal, index) => goals[index]) || 'Understand trust distribution rules'
+    });
+    trackEvent('family_context_shared', { recipient: 'maya', valueCount: values.length });
+    notify('Approved context shared with Maya’s roadmap');
+  }
   return (
     <div className="page">
-      <PageIntro number="04" eyebrow="PRIORITY 4 · FAMILY INTENTIONS" title="Legacy planner" description="A living workspace for the goals, values, instructions, and educational support that should travel with the financial plan."><button className="primary-button" type="button" onClick={() => notify('Legacy plan saved to demo workspace')}>Save plan</button></PageIntro>
-      <section className="legacy-layout"><div className="legacy-main"><article><p className="eyebrow">FAMILY VALUES</p><h2>What should this wealth make possible?</h2><p>Select the values that should shape family conversations and future learning goals.</p><div className="value-chips">{valueOptions.map(value => <button className={values.includes(value) ? 'active' : ''} type="button" key={value} onClick={() => toggleValue(value)}>{values.includes(value) ? '✓ ' : '+ '}{value}</button>)}</div></article><article><p className="eyebrow">PARENT INSTRUCTIONS</p><h2>Context heirs should not have to guess.</h2><textarea defaultValue="Use the trust to support education, a first home, and long-term stability. Before any major withdrawal, meet with the family advisor and review how the decision affects the long-term plan." aria-label="Parent legacy instructions" /><small>Visible to heirs only after the parent approves the sharing settings.</small></article></div><aside className="legacy-roadmap"><p className="eyebrow light">LIVING ROADMAP</p><h2>From intention to action</h2><div className="roadmap-list">{[['Document family values', 'Complete'], ['Add one goal per heir', 'In progress'], ['Attach learning resources', 'Not started'], ['Review sharing permissions', 'Not started']].map(([label, status], index) => <div key={label}><span>{index + 1}</span><p><strong>{label}</strong><small>{status}</small></p><i className={index === 0 ? 'done' : ''}>{index === 0 ? '✓' : '○'}</i></div>)}</div><div className="goal-checklist"><p className="eyebrow light">GOALS FOR MAYA</p>{['Complete graduate degree without debt', 'Build a six-month emergency fund', 'Understand trust distribution rules'].map((goal, index) => <label key={goal}><input type="checkbox" checked={goals[index]} onChange={() => setGoals(list => list.map((item, i) => i === index ? !item : item))} /><span>{goal}</span></label>)}</div></aside></section>
+      <PageIntro number="04" eyebrow="PRIORITY 4 · FAMILY INTENTIONS" title="Parent legacy plan" description="Clarify what you are preparing to transfer, why it matters, and which context your family should receive alongside the financial plan."><button className="primary-button" type="button" onClick={sharePlan}>Approve &amp; share with Maya</button></PageIntro>
+      <section className="legacy-layout"><div className="legacy-main"><article><p className="eyebrow">PURPOSE OF THE LEGACY</p><h2>What should this wealth make possible?</h2><p>Select the values that should shape family conversations and the support you want future generations to understand.</p><div className="value-chips">{valueOptions.map(value => <button className={values.includes(value) ? 'active' : ''} type="button" key={value} onClick={() => toggleValue(value)}>{values.includes(value) ? '✓ ' : '+ '}{value}</button>)}</div></article><article><p className="eyebrow">APPROVED FAMILY CONTEXT</p><h2>Explain the intention, not the private details.</h2><textarea value={instructions} onChange={event => setInstructions(event.target.value)} aria-label="Parent legacy instructions" /><small>This context reaches Maya only when you choose “Approve &amp; share.” Private plan details remain in the parent workspace.</small></article></div><aside className="legacy-roadmap"><p className="eyebrow light">PARENT PLAN</p><h2>From intention to a responsible handoff</h2><div className="roadmap-list">{[['Define what is being prepared', 'Complete'], ['Explain purpose and conditions', 'In progress'], ['Choose approved heir context', 'Ready to share'], ['Review with professionals', 'Next step']].map(([label, status], index) => <div key={label}><span>{index + 1}</span><p><strong>{label}</strong><small>{status}</small></p><i className={index === 0 ? 'done' : ''}>{index === 0 ? '✓' : '○'}</i></div>)}</div><div className="goal-checklist"><p className="eyebrow light">LEARNING PRIORITY FOR MAYA</p>{goalOptions.map((goal, index) => <label key={goal}><input type="radio" name="maya-goal" checked={goals[index]} onChange={() => setGoals(goalOptions.map((_, i) => i === index))} /><span>{goal}</span></label>)}</div></aside></section>
       <Disclaimer />
     </div>
   );
