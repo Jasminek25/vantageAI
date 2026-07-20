@@ -3,7 +3,6 @@ import React from 'react';
 const roles = [
   {
     id: 'parent',
-    owner: 'Vedang',
     icon: '◆',
     title: 'Parent / Wealth Holder',
     description: "Assess estate readiness, plan your legacy, simulate transfer strategies, and supervise your heirs' progress.",
@@ -12,7 +11,6 @@ const roles = [
   },
   {
     id: 'heir',
-    owner: 'Aayush',
     icon: '◇',
     title: 'Heir',
     description: 'Learn from an AI financial coach, simulate what to do with an inheritance, and build a personalized wealth roadmap.',
@@ -84,7 +82,7 @@ export default function LandingPage({ onChooseRole }) {
           <div className="integrated-role-grid">
             {roles.map(role => (
               <article className={role.future ? 'integrated-role-card future' : 'integrated-role-card'} key={role.id}>
-                <header><span>{role.icon}</span><b>{role.owner}</b></header>
+                <header><span>{role.icon}</span>{role.owner && <b>{role.owner}</b>}</header>
                 <h3>{role.title}</h3><p>{role.description}</p>
                 <ul>{role.features.map(feature => <li key={feature}>{feature}</li>)}</ul>
                 <button type="button" onClick={() => onChooseRole(role.id)}>{role.action}<span>→</span></button>
