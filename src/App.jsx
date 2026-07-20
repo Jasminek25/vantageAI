@@ -2,10 +2,41 @@ import React, { useEffect, useState } from 'react';
 import {
   assignHeirLearningGoal,
   getParentDashboard,
-  integrationMode,
   saveReadinessAssessment,
   saveTransferScenario
 } from './services/parentApi.js';
+import LandingPage from './components/LandingPage.jsx';
+import HeirDashboard from './components/HeirDashboard.jsx';
+import FutureFeature from './components/FutureFeature.jsx';
+
+const validRoles = new Set(['landing', 'parent', 'heir', 'manager']);
+
+function roleFromHash() {
+  const role = window.location.hash.replace('#', '') || 'landing';
+  return validRoles.has(role) ? role : 'landing';
+}
+
+export default function App() {
+  const [role, setRole] = useState(roleFromHash);
+
+  useEffect(() => {
+    const syncRole = () => setRole(roleFromHash());
+    window.addEventListener('hashchange', syncRole);
+    return () => window.removeEventListener('hashchange', syncRole);
+  }, []);
+
+  function chooseRole(nextRole) {
+    const safeRole = validRoles.has(nextRole) ? nextRole : 'landing';
+    window.location.hash = safeRole === 'landing' ? '' : safeRole;
+    setRole(safeRole);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (role === 'parent') return <ParentDashboard onSwitchRole={() => chooseRole('landing')} />;
+  if (role === 'heir') return <HeirDashboard onSwitchRole={() => chooseRole('landing')} />;
+  if (role === 'manager') return <FutureFeature onBack={() => chooseRole('landing')} />;
+  return <LandingPage onChooseRole={chooseRole} />;
+}
 
 const features = [
   { id: 'home', short: 'Home', label: 'Parent home', number: '00', glyph: '⌂' },
@@ -41,7 +72,7 @@ function money(value) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
 }
 
-export default function App() {
+function ParentDashboard({ onSwitchRole }) {
   const [view, setView] = useState('home');
   const [data, setData] = useState(null);
   const [mobileNav, setMobileNav] = useState(false);
@@ -67,7 +98,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className={mobileNav ? 'sidebar open' : 'sidebar'}>
-        <button className="brand" type="button" onClick={() => navigate('home')} aria-label="Heirline parent home">
+        <button className="brand" type="button" onClick={onSwitchRole} aria-label="Return to Heirline home">
           <span className="brand-mark" /><span><strong>Heirline</strong><small>FAMILY WEALTH PLANNING</small></span>
         </button>
 
@@ -82,8 +113,8 @@ export default function App() {
           ))}
         </nav>
 
-        <div className="integration-card"><span className="sync-dot" /><p>Integration mode</p><strong>{integrationMode}</strong><small>No API keys or personal documents are stored in this frontend.</small></div>
-        <div className="user-card"><span>VK</span><div><strong>Vedang K.</strong><small>Parent dashboard owner</small></div><b>•••</b></div>
+        <div className="integration-card"><span className="sync-dot" /><p>PRIVATE WORKSPACE</p><strong>Your family plan</strong><small>Only information you choose to share is visible across connected family accounts.</small></div>
+        <div className="user-card"><span>ER</span><div><strong>Elena Rivera</strong><small>Plan owner</small></div><b>•••</b></div>
       </aside>
       {mobileNav && <button className="scrim" type="button" aria-label="Close navigation" onClick={() => setMobileNav(false)} />}
 
@@ -91,7 +122,7 @@ export default function App() {
         <header className="topbar">
           <button className="menu-button" type="button" aria-label="Open navigation" onClick={() => setMobileNav(true)}>☰</button>
           <div className="breadcrumb"><span>Parent dashboard</span><i>/</i><strong>{activeFeature.label}</strong></div>
-          <div className="top-actions"><span className="demo-badge"><i /> FICTIONAL DEMO DATA</span><button className="outline-button" type="button" onClick={() => navigate('home')}>Feature guide</button><button className="primary-button compact" type="button" onClick={() => notify('Presentation mode ready')}>Present demo ↗</button></div>
+          <div className="top-actions"><span className="demo-badge"><i /> FICTIONAL DEMO DATA</span><button className="outline-button" type="button" onClick={onSwitchRole}>All dashboards</button><button className="primary-button compact" type="button" onClick={() => navigate('home')}>Parent home</button></div>
         </header>
 
         <div className="page-stage">
@@ -117,7 +148,7 @@ function Home({ data, onNavigate }) {
   const current = data.documents.filter(item => item.status === 'complete').length;
   return (
     <div className="page home-page">
-      <PageIntro number="00" eyebrow="PARENT WORKSPACE · WEEK 7 BUILD" title="One clear plan for everything you’re preparing to pass on." description="The parent side organizes readiness, transfer choices, family intentions, professionals, heirs, and locations—without pretending to replace an attorney or advisor.">
+      <PageIntro number="00" eyebrow="PARENT DASHBOARD" title="One clear plan for everything you’re preparing to pass on." description="Organize your estate plan, compare transfer choices, coordinate professional reviews, and prepare your family for what comes next.">
         <button className="primary-button" type="button" onClick={() => onNavigate('readiness')}>Start with readiness →</button>
       </PageIntro>
 
@@ -130,11 +161,11 @@ function Home({ data, onNavigate }) {
       </section>
 
       <section className="feature-guide">
-        <div className="section-heading"><div><p className="eyebrow">YOUR PARENT-DASHBOARD SCOPE</p><h2>Six connected features. One understandable flow.</h2></div><p>Each feature answers a different parent question and hands structured information to the next step.</p></div>
+        <div className="section-heading"><div><p className="eyebrow">YOUR FAMILY PLAN</p><h2>Six connected features. One understandable flow.</h2></div><p>Move from assessing readiness to organizing the people, documents, and decisions that shape your legacy.</p></div>
         <div className="feature-grid">{features.filter(item => item.id !== 'home').map(item => <button type="button" key={item.id} onClick={() => onNavigate(item.id)}><span className="feature-code">{item.number}</span><i>{item.glyph}</i><h3>{item.label}</h3><p>{featureDescriptions[item.id]}</p><strong>Open feature →</strong></button>)}</div>
       </section>
 
-      <section className="handoff-card"><div><p className="eyebrow light">HOW THE TEAM FITS TOGETHER</p><h2>One product, three workstreams.</h2><p>This parent module shares only approved family context and learning assignments with the separate heir experience.</p></div><div className="role-map"><article><span>VK</span><p><strong>Vedang</strong><small>Parent dashboard</small></p><b>THIS BUILD</b></article><i>→</i><article><span>AM</span><p><strong>Aayush</strong><small>Heir dashboard + AI coach</small></p><b>API HANDOFF</b></article><i>→</i><article><span>JK</span><p><strong>Jasmine</strong><small>Shared product website</small></p><b>GIT INTEGRATION</b></article></div></section>
+      <section className="handoff-card"><div><p className="eyebrow light">A CONNECTED FAMILY JOURNEY</p><h2>Prepare together. Decide with confidence.</h2><p>Build a clear plan, help heirs develop financial confidence, and bring the right questions to your professional team.</p></div><div className="role-map"><article><span>01</span><p><strong>Organize</strong><small>Plans, documents, and priorities</small></p><b>START HERE</b></article><i>→</i><article><span>02</span><p><strong>Prepare heirs</strong><small>Learning goals and guidance</small></p><b>BUILD CONFIDENCE</b></article><i>→</i><article><span>03</span><p><strong>Review</strong><small>Coordinate with professionals</small></p><b>TAKE ACTION</b></article></div></section>
       <Disclaimer />
     </div>
   );
@@ -234,10 +265,10 @@ function FamilyOverview({ data, notify }) {
   async function assign(heir) { const resource = heir.learningGoal; await assignHeirLearningGoal(heir.id, resource); setAssignments(current => ({ ...current, [heir.id]: resource })); notify(`${resource} assigned in demo mode`); }
   return (
     <div className="page">
-      <PageIntro number="05" eyebrow="CONNECTED TO AAYUSH’S HEIR EXPERIENCE" title="Family overview" description="Parents see consent-based participation signals and can recommend learning goals. The heir remains in control of their private questions and activity."><span className="handoff-badge"><i /> HEIR API HANDOFF READY</span></PageIntro>
+      <PageIntro number="05" eyebrow="FAMILY PREPARATION" title="Family overview" description="See consent-based participation signals, recommend learning goals, and help each heir prepare at their own pace."><span className="handoff-badge"><i /> 3 FAMILY PROFILES</span></PageIntro>
       <section className="privacy-banner"><span>⌾</span><p><strong>Designed for boundaries.</strong> Parents see engagement summaries and assigned goals—not private AI-coach conversations, quiz answers, or personal financial decisions.</p></section>
       <section className="heir-grid">{data.heirs.map((heir, index) => <article className="heir-card" key={heir.id}><header><span className={`heir-avatar c${index + 1}`}>{heir.name.split(' ').map(part => part[0]).join('')}</span><div><h3>{heir.name}</h3><p>{heir.relationship}</p></div><b className={`connection ${heir.connection}`}>{heir.connection}</b></header><div className="engagement-stats"><span><small>ENGAGEMENT</small><strong>{heir.engagement ? `${heir.engagement}%` : '—'}</strong></span><span><small>FINANCIAL LITERACY</small><strong>{heir.literacy ? `${heir.literacy}%` : '—'}</strong></span></div><div className="engagement-bar"><i style={{ width: `${heir.engagement}%` }} /></div><div className="heir-recommendation"><p className="eyebrow">PARENT RECOMMENDATION</p><strong>{heir.recommendation}</strong><span>Suggested goal: {heir.learningGoal}</span></div><footer><button className="primary-button" type="button" disabled={heir.connection !== 'connected'} onClick={() => assign(heir)}>{assignments[heir.id] ? '✓ Assigned' : heir.connection === 'connected' ? 'Assign learning goal' : 'Awaiting consent'}</button><button className="outline-button" type="button">View profile →</button></footer></article>)}</section>
-      <section className="api-handoff"><div><p className="eyebrow light">SHARED DATA BOUNDARY</p><h2>What the parent sends to the heir dashboard</h2></div><div className="handoff-flow"><article><span>01</span><p><strong>Approved context</strong><small>Heir name, relationship, and learning goal</small></p></article><i>→</i><article><span>02</span><p><strong>Aayush’s backend</strong><small>Gemini generates educational explanations server-side</small></p></article><i>→</i><article><span>03</span><p><strong>Parent summary</strong><small>Only consented engagement status returns</small></p></article></div></section>
+      <section className="api-handoff"><div><p className="eyebrow light">FAMILY PRIVACY</p><h2>Share what helps. Keep private what does not.</h2></div><div className="handoff-flow"><article><span>01</span><p><strong>Choose context</strong><small>Name, relationship, and learning goal</small></p></article><i>→</i><article><span>02</span><p><strong>Support learning</strong><small>Heirs receive relevant educational guidance</small></p></article><i>→</i><article><span>03</span><p><strong>See progress</strong><small>Only consented engagement status returns</small></p></article></div></section>
       <Disclaimer />
     </div>
   );
@@ -250,12 +281,12 @@ function JurisdictionMap({ data }) {
     <div className="page">
       <PageIntro number="06" eyebrow="CROSS-BORDER ORGANIZATION" title="Jurisdiction map" description="Locations extracted or entered for assets are grouped into a review map. The system flags questions; licensed professionals provide the answers." />
       <section className="jurisdiction-layout"><div className="location-list"><p className="eyebrow">KNOWN LOCATIONS</p><h2>{data.jurisdictions.length} jurisdictions in the demo plan</h2>{data.jurisdictions.map(item => <button className={selectedId === item.id ? 'active' : ''} type="button" key={item.id} onClick={() => setSelectedId(item.id)}><span>{item.id === 'california' ? 'US' : item.id === 'singapore' ? 'SG' : 'MY'}</span><p><strong>{item.label}</strong><small>{item.type} · {item.assets.length} asset groups</small></p><i>→</i></button>)}</div><article className="jurisdiction-detail"><header><div><p className="eyebrow light">SELECTED JURISDICTION</p><h2>{selected.label}</h2><span>{selected.type}</span></div><div className="map-orbit"><i /><i /><b>{selected.id === 'california' ? 'US' : selected.id === 'singapore' ? 'SG' : 'MY'}</b></div></header><section><p className="eyebrow">ASSETS CONNECTED HERE</p><div className="asset-tags">{selected.assets.map(asset => <span key={asset}>{asset}</span>)}</div></section><section><p className="eyebrow">QUESTIONS TO REVIEW</p><div className="flag-list">{selected.flags.map((flag, index) => <div key={flag}><span>0{index + 1}</span><p>{flag}</p><b>REVIEW</b></div>)}</div></section><footer><span>Recommended professional</span><strong>{selected.professional}</strong><button className="outline-button" type="button">Add to review agenda →</button></footer></article></section>
-      <section className="jurisdiction-warning"><span>!</span><p><strong>No automatic legal conclusions.</strong> Citizenship, residency, asset type, title, tax status, and local law can interact in ways this prototype does not calculate. The feature organizes location context and questions for counsel.</p></section>
+      <section className="jurisdiction-warning"><span>!</span><p><strong>No automatic legal conclusions.</strong> Citizenship, residency, asset type, title, tax status, and local law can interact in ways Heirline cannot determine automatically. Use this view to organize location context and prepare questions for counsel.</p></section>
       <Disclaimer />
     </div>
   );
 }
 
 function Disclaimer() {
-  return <p className="disclaimer">Fictional prototype data. Heirline provides organizational and educational support—not legal, tax, or financial advice.</p>;
+  return <p className="disclaimer">Illustrative information only. Heirline provides organizational and educational support—not legal, tax, or financial advice.</p>;
 }

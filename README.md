@@ -13,6 +13,47 @@ explicit while providing one integration point for the final demo.
 - **Aayush — heir dashboard backend:** the Python inheritance assistant,
   financial planner, asset manager, and document tracker.
 
+## Integrated demo
+
+The `agent/integrate-heirline` workstream combines those contributions into one
+React website:
+
+```text
+Jasmine landing + role selector
+├── Vedang parent dashboard (six working parent features)
+├── Aayush heir experience (coach, assets, planner, documents)
+└── Wealth Manager dashboard (clearly labeled future feature)
+```
+
+The heir web experience calls the small server-side adapter in `api_server.py`.
+With no Gemini key, the prototype remains fully demoable using explicit offline
+responses and deterministic calculations. With a server-side key and Aayush's
+optional dependencies installed, the coach can delegate to `assistant.Assistant`.
+
+### Run the complete demo
+
+```bash
+npm ci
+npm run dev
+```
+
+`npm run dev` starts the Python API at `http://127.0.0.1:8001` and Vite at
+`http://localhost:5173`; Vite proxies `/api` to keep browser requests same-origin.
+To run only the static offline web demo, use
+`npm run dev:web`.
+
+### Verify
+
+```bash
+npm run validate
+npm run build
+python3 -m unittest -v test_api_server.py
+python3 test_smoke.py  # after: python3 -m pip install -r requirements-ci.txt
+```
+
+See [`docs/INTEGRATION_GUIDE.md`](docs/INTEGRATION_GUIDE.md) for the ownership
+map, API routes, demo script, privacy boundary, and production limitations.
+
 ## Vedang's Parent Dashboard
 
 The parent experience is a demo-ready React application with six connected
@@ -30,15 +71,6 @@ features:
    goals.
 6. **Jurisdiction Map** — groups assets by location and flags questions for
    professional review.
-
-Run and verify the web application:
-
-```bash
-npm install
-npm run dev
-npm run validate
-npm run build
-```
 
 The parent dashboard's ownership, privacy boundary, proposed API routes, and
 integration contract are documented in
@@ -127,6 +159,10 @@ python test_smoke.py                   # offline tests
 
 ### Wiring a UI
 
+The integrated prototype now uses `api_server.py`, a standard-library JSON
+adapter that stays runnable without an API key. The Flask example below remains
+an optional production-framework direction, not the current demo entrypoint.
+
 Flask + SSE streaming:
 
 ```python
@@ -202,7 +238,7 @@ if q:
 Never commit: `GemAPI.env`, `data/` (your statements), `store/portfolio.json`
 (salary, debts), `chroma_store/` (Chroma persists the original chunk text, so it
 leaks the documents, not just vectors). All are gitignored, and
-`.github/workflows/ci.yml` fails the build if any get tracked.
+`.github/workflows/python-backend-checks.yml` fails the build if any get tracked.
 
 **The `.gitignore` trap:** a bare `.env` rule matches only a file named exactly
 `.env`. It does **not** match `GemAPI.env`, `GeminiAPI.env`, or `keys.env.local`.
