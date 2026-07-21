@@ -15,8 +15,7 @@ explicit while providing one integration point for the final demo.
 
 ## Integrated demo
 
-The `agent/integrate-heirline` workstream combines those contributions into one
-React website:
+The shared React website combines those contributions into one product:
 
 ```text
 Jasmine landing + role selector
@@ -26,9 +25,25 @@ Jasmine landing + role selector
 ```
 
 The heir web experience calls the small server-side adapter in `api_server.py`.
-With no Gemini key, the prototype remains fully demoable using explicit offline
-responses and deterministic calculations. With a server-side key and Aayush's
-optional dependencies installed, the coach can delegate to `assistant.Assistant`.
+With no external API key, the prototype remains fully demoable using curated
+offline responses and deterministic calculations. In a WebGPU-capable browser,
+the heir can optionally download and run a compact open-source model locally.
+The existing Python adapter remains available for future server-side deployment.
+
+### Current validation-ready product layer — Vedang
+
+The final product pass adds the features needed to move from a visual prototype
+to a testable market demo:
+
+- two landing-page conversion paths for families and advisor firms;
+- an interest form and first-party campaign-event adapter;
+- a persistent, explainable readiness assessment;
+- an approved parent-to-heir context handoff;
+- distinct Parent Legacy Plan and Heir Financial Roadmap workflows;
+- an optional free browser-local inheritance coach with a reliable fallback.
+
+The product code is in `src/`. The free Google Sheets collection adapter and
+setup instructions are in [`docs/VALIDATION_DATA_SETUP.md`](docs/VALIDATION_DATA_SETUP.md).
 
 ### Run the complete demo
 
@@ -65,8 +80,8 @@ features:
    hypothetical structures.
 3. **Professional Coordination Hub** — tracks documents, review dates, advisors,
    and milestones.
-4. **Legacy Planner** — organizes family values, goals, instructions, and a
-   living roadmap.
+4. **Parent Legacy Plan** — organizes what is being prepared, why it matters,
+   conditions and values, and the context approved for an heir.
 5. **Family Overview** — shows consent-based heir engagement and assigns learning
    goals.
 6. **Jurisdiction Map** — groups assets by location and flags questions for
