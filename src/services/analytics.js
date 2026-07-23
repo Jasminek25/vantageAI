@@ -1,4 +1,7 @@
-const DATA_ENDPOINT = import.meta.env.VITE_DATA_ENDPOINT || '';
+const DEFAULT_DATA_ENDPOINT =
+  'https://script.google.com/macros/s/AKfycbyodapk7ohVY9_iStL0V7WqT9Bd-o4wIdbt5o7_OEL_Cw6lT8Ynzb_F_h7xAtw0wXan/exec';
+
+const DATA_ENDPOINT = import.meta.env.VITE_DATA_ENDPOINT || DEFAULT_DATA_ENDPOINT;
 const EVENT_KEY = 'heirline-demo-events';
 const LEAD_KEY = 'heirline-demo-leads';
 const SESSION_KEY = 'heirline-demo-session';
