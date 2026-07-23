@@ -31,6 +31,12 @@ Coach conversations and dashboard answers are never sent to analytics.
 6. Rebuild and republish the website. The script creates `Leads` and `Events`
    tabs automatically on the first submissions.
 
+The production build is currently connected to the Heirline pilot validation
+collector through the public fallback URL in `src/services/analytics.js`. A
+`VITE_DATA_ENDPOINT` value can replace it for another deployment. The Google
+Sheet remains private; only the public collector URL is included in the client
+build.
+
 ## Campaign review
 
 Keep the Google Sheet in the team Drive folder. During a funded pilot, review:
