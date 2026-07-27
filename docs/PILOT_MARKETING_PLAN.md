@@ -2,7 +2,7 @@
 
 ## Decision this pilot should answer
 
-Heirline should not begin by trying to prove that it can serve every family and every wealth-management firm. A 21-day pilot should answer one narrower question:
+Heirline should not begin by trying to prove that it can serve every family and every wealth-management firm. A 14-day pilot should answer one narrower question:
 
 **Which entry point creates stronger early demand: families preparing for inheritance conversations, or wealth advisors seeking a better client experience?**
 
@@ -24,7 +24,7 @@ The recommended starting hypothesis is **B2B2C first**: wealth-management firms 
 - Call to action: **Join early access.**
 - The campaign should not target or imply knowledge of an individual's wealth, age, health, or private financial circumstances.
 
-## 21-day test design
+## 14-day test design
 
 ### Week 0 — compliance and measurement preflight
 
@@ -48,11 +48,7 @@ The recommended starting hypothesis is **B2B2C first**: wealth-management firms 
 - Conduct short discovery calls with qualified advisor leads.
 - Tag each lead as qualified, unqualified, contacted, call booked, or pilot candidate.
 
-### Days 15–21 — validate intent
-
-- Ask the strongest advisor leads to review the product and discuss a small guided pilot.
-- Send one consented follow-up to family leads asking which workflow they would most value.
-- End with a decision memo: continue B2B2C, test direct-to-family further, revise the offer, or stop paid acquisition.
+At the end of Day 14, ask the strongest advisor leads to review the product and discuss a small guided pilot. Send one consented follow-up to family leads asking which workflow they would most value. Then write a decision memo: continue B2B2C, test direct-to-family further, revise the offer, or stop paid acquisition.
 
 ## Recommended test budget
 
@@ -60,14 +56,14 @@ This is a controlled validation budget, not a growth budget.
 
 | Item | Allocation | Purpose |
 | --- | ---: | --- |
-| Google Search | $600 | Capture people already expressing planning intent |
-| Meta | $400 | Test family-oriented educational creative |
-| Reddit | $200 | Test contextually relevant planning and advisor communities |
-| Contingency for platform taxes, currency adjustments, or measurement fixes | $200 | Prevent unplanned overage |
-| Optional creative production | $100 | Captions, licensed asset, or light editing if free production is insufficient |
-| **Maximum authorized pilot** | **$1,500** | Hard cap |
+| Google Search | $150 | Capture people already expressing planning intent |
+| Meta | $100 | Test family-oriented educational creative |
+| Reddit | $25 | Test one contextually relevant planning or advisor community |
+| Contingency for platform taxes, currency adjustments, or measurement fixes | $25 | Prevent unplanned overage |
+| Creative production | $0 | Use the finished in-house concepts for the first test |
+| **Maximum authorized pilot** | **$300** | Hard cap |
 
-No platform should receive payment information until the compliance preflight is complete. Actual auction costs and taxes vary by account, jurisdiction, and billing setup, so the person funding the pilot should confirm the final checkout amount before launch. Google may serve up to twice an average daily budget on an individual day, while still applying its billing limits; use platform account limits and the $1,500 authorization cap as separate controls.
+No platform should receive payment information until the compliance preflight is complete. Actual auction costs and taxes vary by account, jurisdiction, and billing setup, so the person funding the pilot should confirm the final checkout amount before launch. Google may serve up to twice an average daily budget on an individual day, while still applying its billing limits; use platform account limits and the $300 authorization cap as separate controls.
 
 TikTok is not recommended for the first paid pilot. Its official North American web-conversion guidance recommends a $30 minimum daily ad-group budget, which would consume too much of a small validation budget before Heirline has proven its message. It can be tested later with organic short-form creative first.
 
@@ -130,10 +126,10 @@ TikTok is not recommended for the first paid pilot. Its official North American 
 
 The pilot is promising if it produces either:
 
-- at least **5 qualified advisor leads**, at least **2 completed discovery calls**, and at least **1 firm willing to discuss a guided pilot**; or
-- at least **20 consented family leads** at a reasonable cost, with a clear repeated problem visible in the selected priorities and follow-up responses.
+- at least **3 qualified advisor leads** and at least **1 completed discovery call**; or
+- at least **10 consented family leads**, with a clear repeated problem visible in the selected priorities and follow-up responses.
 
-These thresholds are directional because a $1,500 campaign is a small-sample validation test. They are not proof of product-market fit.
+These thresholds are directional because a $300 campaign is a small-sample validation test. They are not proof of product-market fit.
 
 ## Data and privacy boundary
 
@@ -162,4 +158,3 @@ The final internship deliverable can therefore be a **launch-ready pilot proposa
 - Google financial-products and services policy: https://support.google.com/adspolicy/answer/2464998
 - Google financial-services disclosure requirements: https://support.google.com/adspolicy/answer/15187149
 - TikTok budget guidance: https://ads.tiktok.com/business/how-it-works/budgeting
-
