@@ -45,6 +45,16 @@ to a testable market demo:
 The product code is in `src/`. The free Google Sheets collection adapter and
 setup instructions are in [`docs/VALIDATION_DATA_SETUP.md`](docs/VALIDATION_DATA_SETUP.md).
 
+### Final internship checkpoint and continuation
+
+The final presentation led to a Vantage AI-approved continuation phase with
+weekly syncs, a professional-domain requirement, and an initial $200 Meta and
+Reddit validation budget. The complete handoff, artifact index, ownership map,
+live-versus-illustrative boundary, and launch checklist are in
+[`docs/CONTINUATION_CHECKPOINT.md`](docs/CONTINUATION_CHECKPOINT.md). The revised
+campaign plan is in
+[`docs/PILOT_MARKETING_PLAN.md`](docs/PILOT_MARKETING_PLAN.md).
+
 ### Run the complete demo
 
 ```bash
