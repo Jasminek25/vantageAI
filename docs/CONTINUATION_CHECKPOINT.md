@@ -74,6 +74,7 @@ from Vedang's GitHub account; PR #2 contains Aayush's heir-dashboard work.
 - Integration guide: `docs/INTEGRATION_GUIDE.md`
 - Validation setup: `docs/VALIDATION_DATA_SETUP.md`
 - Continuation marketing plan: `docs/PILOT_MARKETING_PLAN.md`
+- Vedang contribution record: `docs/VEDANG_FINAL_CONTRIBUTION_RECORD.md`
 
 Vedang's private speaking script is intentionally excluded from the shared
 handoff.
