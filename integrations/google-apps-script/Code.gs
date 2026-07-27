@@ -48,7 +48,10 @@ function appendEvent_(spreadsheet, payload) {
 
 function appendRow_(spreadsheet, sheetName, headers, row) {
   const sheet = sheet_(spreadsheet, sheetName, headers);
-  const rowNumber = sheet.getLastRow() + 1;
+  let rowNumber = sheet.getLastRow() + 1;
+  while (sheet.getRange(rowNumber, 1, 1, row.length).isPartOfMerge()) {
+    rowNumber += 1;
+  }
   sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
   SpreadsheetApp.flush();
   return { sheetName, rowNumber };
