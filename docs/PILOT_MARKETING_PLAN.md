@@ -8,6 +8,17 @@ Heirline should not begin by trying to prove that it can serve every family and 
 
 The recommended starting hypothesis is **B2B2C first**: wealth-management firms are the primary buyer, while families and heirs are the users. This matches the product's connected parent, heir, and future advisor experiences and gives Heirline a clearer path to trust, distribution, and professional oversight. The family campaign remains in the pilot as a comparison, not as a second full business model.
 
+## What the market evidence changes
+
+This plan is based on current transfer, channel, and creative evidence rather than an assumption that Heirline should advertise everywhere.
+
+- **The category is large, but the immediate commercial opportunity is specific.** Cerulli estimates that $124 trillion will transfer through 2048 and identifies Generation X as the largest inheriting cohort over the next decade. This makes the advisor-client-heir relationship a more defensible starting point than a broad consumer wealth app.
+- **Trusted distribution can move estate planning from awareness to action.** Trust & Will reports that its Fifth Third Bank partnership produced more than 26,000 will redemptions in four months and a 69.3% registration-to-completion rate. Heirline should therefore test whether an advisor or firm can act as the trusted entry point.
+- **The strongest creative makes the subject human.** Marketing Architects reports that Trust & Will's intimate, everyday family campaign increased unaided awareness by 75% and purchase intent by 86%. An EmberTribe case study reports that family-oriented micro-influencer ads became Trust & Will's five most profitable Facebook ads, with one ad generating $32,417 in sales over 12 months.
+- **Channel fit matters more than novelty.** Pew's 2025 data shows Facebook is used by 74% of U.S. adults ages 50–64 and 57% of adults 65+, while YouTube reaches 85% and 64% of those groups. Reddit reaches 16% and 6%, and TikTok reaches 30% and 12%, respectively. Paid Meta and high-intent Search are therefore more defensible first tests; short-form video and Reddit should begin as organic learning channels.
+
+The resulting creative principle is simple: **show a real family conversation, name one concrete next step, and make the call to action low pressure.** Do not lead with AI, dashboards, technical architecture, or fear.
+
 ## Audiences and conversion paths
 
 ### 1. Wealth advisors and firms — primary
@@ -56,12 +67,13 @@ This is a controlled validation budget, not a growth budget.
 
 | Item | Allocation | Purpose |
 | --- | ---: | --- |
-| Google Search | $150 | Capture people already expressing planning intent |
-| Meta | $100 | Test family-oriented educational creative |
-| Reddit | $25 | Test one contextually relevant planning or advisor community |
+| Google Search | $175 | Capture advisors and families already expressing planning intent |
+| Meta | $100 | Test the family-readiness message with human, educational creative |
 | Contingency for platform taxes, currency adjustments, or measurement fixes | $25 | Prevent unplanned overage |
 | Creative production | $0 | Use the finished in-house concepts for the first test |
 | **Maximum authorized pilot** | **$300** | Hard cap |
+
+The $300 is an authorization ceiling, not an upfront commitment. Begin with the free preflight, release only the first $100 after tracking and disclosures pass review, and use the remaining budget only if the leads are relevant. Paid LinkedIn, Reddit, TikTok, and YouTube are deferred because this budget is too small to test them credibly. Advisor outreach, community listening, and the video concept can still be tested organically at no media cost.
 
 No platform should receive payment information until the compliance preflight is complete. Actual auction costs and taxes vary by account, jurisdiction, and billing setup, so the person funding the pilot should confirm the final checkout amount before launch. Google may serve up to twice an average daily budget on an individual day, while still applying its billing limits; use platform account limits and the $300 authorization cap as separate controls.
 
@@ -69,38 +81,56 @@ TikTok is not recommended for the first paid pilot. Its official North American 
 
 ## Creative concepts
 
-### Advisor ad A — conversation readiness
+### Meta family ad — platform-ready concept
 
-**Headline:** Help families prepare before the inheritance conversation  
-**Body:** Heirline gives parents and heirs separate, connected planning experiences so your next client conversation begins with clearer goals and fewer missing steps.  
-**CTA:** Request a guided pilot
+**Primary text:** If your family had to take over tomorrow, would they know what matters and what comes next? Heirline turns the handoff into one clear, guided plan.
 
-### Advisor ad B — client experience
+**Headline:** Give your family a clearer start
 
-**Headline:** A clearer digital handoff for the next generation  
-**Body:** Explore a client-facing inheritance-readiness experience designed to complement professional advice, not replace it.  
-**CTA:** See the advisor pilot
+**Description:** Join the early-access research pilot.
 
-### Family ad A — clarity
+**CTA:** Learn More
 
-**Headline:** Your family should not have to figure out the handoff all at once  
-**Body:** Organize what matters, identify the next conversation, and help the next generation prepare. No financial documents are required for early access.  
-**CTA:** Join early access
+**Destination:** `/families?utm_source=meta&utm_medium=paid_social&utm_campaign=family_readiness&utm_content=clearer_start`
 
-### Family ad B — preparedness
+### Meta/LinkedIn advisor concept
 
-**Headline:** A will is important. Family readiness is broader.  
-**Body:** See how a guided parent-and-heir plan could make inheritance conversations clearer and more responsible.  
-**CTA:** Explore Heirline
+**Primary text:** The relationship should not end at the first generation. Heirline gives clients, heirs, and advisors one guided preparation experience.
 
-### Short video storyboard — 20 seconds
+**Headline:** Bring heirs into the plan earlier
 
-1. “Most families plan what they will pass on.”
-2. “Far fewer prepare the people receiving it.”
-3. Show the parent readiness score and one approved learning goal.
-4. Switch to the heir dashboard and reveal that same goal.
-5. “Heirline connects the plan, the conversation, and the next generation.”
-6. End card: “Join early access” and “Request an advisor pilot.”
+**Description:** Request a guided pilot.
+
+**CTA:** Learn More
+
+**Destination:** `/advisors?utm_source=meta&utm_medium=paid_social&utm_campaign=advisor_pilot&utm_content=next_generation`
+
+### Google responsive Search ad — advisor intent
+
+All assets stay within Google's published limits of 30 characters per headline and 90 characters per description.
+
+**Headline 1 (29):** Family Wealth Transfer Portal
+
+**Headline 2 (25):** Prepare Clients and Heirs
+
+**Headline 3 (24):** Request a Heirline Pilot
+
+**Description 1 (88):** Give clients and heirs one guided place to prepare for wealth transfer. Request a pilot.
+
+**Description 2 (80):** Turn family intentions into clear next steps while keeping advisors in the loop.
+
+**Path:** `heirline.com/advisors`
+
+**Initial keyword themes:** family wealth transfer software; inheritance planning portal; engage next generation clients; wealth transfer client experience.
+
+### Short video storyboard — 15 seconds
+
+1. **0–3 seconds:** Close-up of a parent opening a family planning folder. On-screen copy: “If your family had to take over tomorrow...”
+2. **3–7 seconds:** The parent dashboard highlights one approved learning goal. On-screen copy: “Would they know what matters?”
+3. **7–11 seconds:** Switch to the heir dashboard; the same goal appears. On-screen copy: “One plan. Two perspectives.”
+4. **11–15 seconds:** Parent and adult child sit together. End card: “Give your family a clearer start. Join Heirline early access.”
+
+The video should use a real person speaking or natural family footage, large captions, and the product interaction. It should feel like useful advice in-feed, not a polished corporate explainer.
 
 ## Measurement
 
@@ -154,7 +184,14 @@ The final internship deliverable can therefore be a **launch-ready pilot proposa
 
 ## Sources and platform constraints
 
+- Cerulli, $124 trillion wealth transfer through 2048: https://www.cerulli.com/press-releases/cerulli-anticipates-124-trillion-in-wealth-will-transfer-through-2048
+- Cerulli, Generation X as the immediate opportunity: https://www.cerulli.com/press-releases/generation-x-represents-the-most-immediate-opportunity-for-wealth-managers
+- Pew Research Center, 2025 platform use by age: https://www.pewresearch.org/internet/fact-sheet/social-media/
+- Trust & Will and Fifth Third Bank case study: https://trustandwill.com/learn/fifth-third-bank-case-study
+- Marketing Architects, Trust & Will TV creative case study: https://www.marketingarchitects.com/case-studies/tv-spots/trust-%26-will
+- EmberTribe, Trust & Will micro-influencer ad case study: https://www.embertribe.com/case-studies/changing-estate-planning-with-micro-influencers
+- Meta lead generation overview: https://www.facebook.com/business/ads/ad-objectives/lead-generation
+- Google responsive Search ad limits: https://support.google.com/google-ads/answer/7684791
 - Google Ads spending limits: https://support.google.com/google-ads/answer/10486637
 - Google financial-products and services policy: https://support.google.com/adspolicy/answer/2464998
 - Google financial-services disclosure requirements: https://support.google.com/adspolicy/answer/15187149
-- TikTok budget guidance: https://ads.tiktok.com/business/how-it-works/budgeting
