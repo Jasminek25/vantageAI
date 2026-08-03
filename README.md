@@ -54,6 +54,9 @@ live-versus-illustrative boundary, and launch checklist are in
 [`docs/CONTINUATION_CHECKPOINT.md`](docs/CONTINUATION_CHECKPOINT.md). The revised
 campaign plan is in
 [`docs/PILOT_MARKETING_PLAN.md`](docs/PILOT_MARKETING_PLAN.md).
+The account responsibilities, exact $200 allocation, campaign settings, tracked
+links, QA steps, and meeting approvals are in
+[`docs/PILOT_LAUNCH_CHECKLIST.md`](docs/PILOT_LAUNCH_CHECKLIST.md).
 Vedang's verified parent-dashboard, integration, validation, and continuation
 trail is indexed in
 [`docs/VEDANG_FINAL_CONTRIBUTION_RECORD.md`](docs/VEDANG_FINAL_CONTRIBUTION_RECORD.md).

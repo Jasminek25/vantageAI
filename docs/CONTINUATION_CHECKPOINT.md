@@ -85,22 +85,28 @@ handoff.
 
 - Vantage AI selects and owns the registrar account, payment method, recovery
   email, and renewal.
-- `heirline.com` is already registered and listed for resale, so the team should
-  verify affordable alternatives immediately before purchase.
+- `heirline.com` is already registered and listed for resale. Live registry
+  checks on August 2 returned no registration record for `tryheirline.com`,
+  `joinheirline.com`, or `heirlinewealth.com`; availability and price must still
+  be confirmed at checkout.
+- `tryheirline.com` is the recommended pilot option, subject to An's approval.
+- Domain availability is not brand clearance. Preliminary research found other
+  estate and inheritance businesses using Heirline or similar wording, so
+  Vantage AI should review the name before purchase and obtain appropriate
+  clearance before a scaled launch.
 - The selected domain points to the existing GitHub Pages deployment with free
   HTTPS; a separate hosting subscription is not currently required.
 
 ### Step 2 — $200 paid-media pilot
 
-- Meta campaign: $90
+- Domain: up to $12
+- Meta campaign: $100
 - Reddit campaign: $70
-- Motion-video production: $20
-- Tax, rejection, or tracking reserve: $20
-- Maximum authorized paid-media spend: $200
+- Domain checkout, tax, or tracking reserve: $18
+- Maximum authorized pilot spend: $200
 
-The domain is treated as a separate Vantage AI-owned prerequisite. If Vantage
-AI intends the domain to come from the same $200, the team will reduce paid
-media before launch rather than exceed the cap.
+The domain comes from the same $200 ceiling. The reserve remains unspent unless
+needed. Any amount that would push the total above $200 reduces Meta spend.
 
 ### Step 3 — Vantage AI setup needed
 
@@ -125,6 +131,9 @@ Vantage AI should provide or confirm:
 6. complete one end-to-end test submission on each campaign path;
 7. obtain Vantage AI's written launch approval; and
 8. begin the seven-day capped test, followed by analysis and a decision memo.
+
+The exact settings, three tagged destinations, QA procedure, and decision rules
+are in `docs/PILOT_LAUNCH_CHECKLIST.md`.
 
 ## Repository verification
 

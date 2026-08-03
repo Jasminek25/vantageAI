@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { analyticsMode, submitInterest, trackEvent } from '../services/analytics.js';
 
 const roles = [
@@ -42,6 +42,18 @@ const capabilities = [
 export default function LandingPage({ onChooseRole }) {
   const [interestOpen, setInterestOpen] = useState(false);
   const [audience, setAudience] = useState('family');
+  const campaignFormOpened = useRef(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('open') !== 'interest' || campaignFormOpened.current) return;
+    const campaignAudience = params.get('audience') === 'advisor' ? 'advisor' : 'family';
+    campaignFormOpened.current = true;
+    setAudience(campaignAudience);
+    setInterestOpen(true);
+    trackEvent('interest_form_opened', { audience: campaignAudience, trigger: 'campaign_link' });
+  }, []);
+
   function openInterest(nextAudience = 'family') {
     setAudience(nextAudience);
     setInterestOpen(true);
@@ -123,7 +135,7 @@ export default function LandingPage({ onChooseRole }) {
         </section>
       </main>
 
-      <footer className="landing-footer"><strong>Heirline</strong><span>Family wealth planning for every generation.</span></footer>
+      <footer className="landing-footer"><strong>Heirline</strong><span>Family wealth planning for every generation.<small>Educational and organizational prototype. Not legal, tax, investment, or financial advice.</small></span></footer>
       {interestOpen && <InterestDialog initialAudience={audience} onClose={() => setInterestOpen(false)} />}
     </div>
   );
