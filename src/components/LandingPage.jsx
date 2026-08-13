@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { analyticsMode, submitInterest, trackEvent } from '../services/analytics.js';
+import { setTrackingConsent, trackingConsent, trackRedditLead } from '../services/adTracking.js';
 
 const roles = [
   {
@@ -42,6 +43,20 @@ const capabilities = [
 export default function LandingPage({ onChooseRole }) {
   const [interestOpen, setInterestOpen] = useState(false);
   const [audience, setAudience] = useState('family');
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [consent, setConsent] = useState(trackingConsent());
+  const campaignFormOpened = useRef(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('open') !== 'interest' || campaignFormOpened.current) return;
+    const campaignAudience = params.get('audience') === 'advisor' ? 'advisor' : 'family';
+    campaignFormOpened.current = true;
+    setAudience(campaignAudience);
+    setInterestOpen(true);
+    trackEvent('interest_form_opened', { audience: campaignAudience, trigger: 'campaign_link' });
+  }, []);
+
   function openInterest(nextAudience = 'family') {
     setAudience(nextAudience);
     setInterestOpen(true);
@@ -123,8 +138,10 @@ export default function LandingPage({ onChooseRole }) {
         </section>
       </main>
 
-      <footer className="landing-footer"><strong>Heirline</strong><span>Family wealth planning for every generation.</span></footer>
+      <footer className="landing-footer"><strong>Heirline</strong><span>Family wealth planning for every generation.<small>Educational and organizational prototype. Not legal, tax, investment, or financial advice. <button type="button" onClick={() => setPrivacyOpen(true)}>Pilot privacy notice</button></small></span></footer>
       {interestOpen && <InterestDialog initialAudience={audience} onClose={() => setInterestOpen(false)} />}
+      {privacyOpen && <PrivacyDialog onClose={() => setPrivacyOpen(false)} />}
+      {!consent && <section className="tracking-consent" aria-label="Analytics choice"><p><strong>Help us evaluate this pilot.</strong> With your permission, Heirline uses Reddit advertising measurement to understand visits and signups. We do not send the financial information shown in this demonstration.</p><div><button type="button" onClick={() => { setTrackingConsent('declined'); setConsent('declined'); }}>Not now</button><button type="button" onClick={() => { setTrackingConsent('granted'); setConsent('granted'); }}>Allow measurement</button><button type="button" onClick={() => setPrivacyOpen(true)}>Privacy details</button></div></section>}
     </div>
   );
 }
@@ -138,6 +155,7 @@ function InterestDialog({ initialAudience, onClose }) {
     if (!form.email || !form.priority || !form.consent) return;
     setStatus('Saving your interest…');
     const result = await submitInterest(form);
+    if (result.delivered) trackRedditLead();
     setStatus(result.delivered ? 'You’re on the list. We’ll be in touch.' : 'Saved for this demonstration. Campaign collection can be connected when the pilot begins.');
   }
 
@@ -157,6 +175,20 @@ function InterestDialog({ initialAudience, onClose }) {
         </form>
         <small className="interest-mode">{analyticsMode() === 'connected' ? 'Secure pilot collection is connected.' : 'Demonstration collection mode.'}</small>
       </>}
+    </section>
+  </div>;
+}
+
+function PrivacyDialog({ onClose }) {
+  return <div className="interest-overlay" role="presentation" onMouseDown={event => event.target === event.currentTarget && onClose()}>
+    <section className="interest-dialog privacy-dialog" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+      <button className="interest-close" type="button" aria-label="Close" onClick={onClose}>×</button>
+      <p className="landing-kicker">PILOT PRIVACY NOTICE</p><h2 id="privacy-title">A narrow notice for market validation.</h2>
+      <p>Heirline is an early-stage Vantage AI pilot. The public form collects only your email, audience type, optional organization, selected priority, consent, and campaign source so the team can respond and evaluate interest.</p>
+      <h3>Advertising measurement</h3><p>If you choose “Allow measurement,” the Reddit Pixel records visits and signup events for campaign reporting. Heirline does not use the Pixel to send the fictional financial values shown inside the product demonstration.</p>
+      <h3>How information is used</h3><p>Pilot information is used only to measure interest, understand which outreach brought visitors to Heirline, and contact people who asked about early access or a pilot. Do not submit legal, financial, tax, account, or identification information.</p>
+      <h3>Your choice</h3><p>You may decline advertising measurement and still use the demonstration or submit the interest form. Pilot records should be reviewed and removed when they are no longer needed for this validation effort.</p>
+      <button className="landing-primary" type="button" onClick={onClose}>Return to Heirline</button>
     </section>
   </div>;
 }

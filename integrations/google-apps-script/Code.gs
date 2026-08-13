@@ -1,20 +1,22 @@
 const LEAD_HEADERS = ['timestamp', 'leadId', 'email', 'audience', 'organization', 'priority', 'consent', 'sessionId', 'source', 'medium', 'campaign', 'content'];
 const EVENT_HEADERS = ['timestamp', 'name', 'sessionId', 'page', 'source', 'medium', 'campaign', 'content', 'details'];
+const SPREADSHEET_ID = '15XcxWHSI_WAaTp5WdWi-kjlr6f9sUQnLNWq4pZNbrWw';
 
 function doPost(event) {
   try {
     const payload = JSON.parse(event.postData.contents || '{}');
-    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
+    let result;
     try {
-      if (payload.recordType === 'lead') appendLead_(spreadsheet, payload);
-      else if (payload.recordType === 'event') appendEvent_(spreadsheet, payload);
+      if (payload.recordType === 'lead') result = appendLead_(spreadsheet, payload);
+      else if (payload.recordType === 'event') result = appendEvent_(spreadsheet, payload);
       else throw new Error('Unsupported record type');
     } finally {
       lock.releaseLock();
     }
-    return json_({ ok: true });
+    return json_({ ok: true, ...result });
   } catch (error) {
     return json_({ ok: false, error: String(error.message || error) });
   }
@@ -31,7 +33,7 @@ function appendLead_(spreadsheet, payload) {
     clean_(payload.sessionId, 100), clean_(payload.source, 100), clean_(payload.medium, 100),
     clean_(payload.campaign, 120), clean_(payload.content, 120)
   ];
-  sheet_(spreadsheet, 'Leads', LEAD_HEADERS).appendRow(row);
+  return appendRow_(spreadsheet, 'Leads', LEAD_HEADERS, row);
 }
 
 function appendEvent_(spreadsheet, payload) {
@@ -41,7 +43,18 @@ function appendEvent_(spreadsheet, payload) {
     clean_(payload.campaign, 120), clean_(payload.content, 120),
     clean_(JSON.stringify(payload.details || {}), 1000)
   ];
-  sheet_(spreadsheet, 'Events', EVENT_HEADERS).appendRow(row);
+  return appendRow_(spreadsheet, 'Events', EVENT_HEADERS, row);
+}
+
+function appendRow_(spreadsheet, sheetName, headers, row) {
+  const sheet = sheet_(spreadsheet, sheetName, headers);
+  let rowNumber = sheet.getLastRow() + 1;
+  while (sheet.getRange(rowNumber, 1, 1, row.length).isPartOfMerge()) {
+    rowNumber += 1;
+  }
+  sheet.getRange(rowNumber, 1, 1, row.length).setValues([row]);
+  SpreadsheetApp.flush();
+  return { sheetName, rowNumber };
 }
 
 function sheet_(spreadsheet, name, headers) {
