@@ -10,6 +10,7 @@ import HeirDashboard from './components/HeirDashboard.jsx';
 import FutureFeature from './components/FutureFeature.jsx';
 import { trackEvent } from './services/analytics.js';
 import { getSavedReadiness, saveReadinessLocally, saveSharedFamilyContext } from './services/sharedPlan.js';
+import { initializeAdTracking } from './services/adTracking.js';
 
 const validRoles = new Set(['landing', 'parent', 'heir', 'manager']);
 
@@ -28,6 +29,7 @@ export default function App() {
   }, []);
 
   useEffect(() => { trackEvent('page_view', { experience: role }); }, [role]);
+  useEffect(() => { initializeAdTracking(); }, []);
 
   function chooseRole(nextRole) {
     const safeRole = validRoles.has(nextRole) ? nextRole : 'landing';
