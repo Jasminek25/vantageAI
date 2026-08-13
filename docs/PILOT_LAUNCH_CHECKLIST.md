@@ -61,7 +61,7 @@ An or another authorized adult at Vantage AI should:
 1. Buy the approved domain in the Vantage-owned registrar account.
 2. Add the domain to GitHub Pages, set the repository custom domain, configure
    DNS, and verify HTTPS.
-3. Replace `[FINAL_DOMAIN]` in the three campaign URLs below.
+3. Verify the three tagged `tryheirline.com` campaign URLs below.
 4. Confirm the live site loads on phone and desktop.
 5. Open each tagged URL and verify that the family interest form opens
    immediately.
@@ -79,19 +79,19 @@ An or another authorized adult at Vantage AI should:
 ### Meta ad A — Parent Plan / Heir Ready
 
 ```text
-https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=parent_plan
+https://tryheirline.com/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=parent_plan
 ```
 
 ### Meta ad B — Prepared for the Future
 
 ```text
-https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=prepared_future
+https://tryheirline.com/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=prepared_future
 ```
 
 ### Reddit ad — Handoff Plan
 
 ```text
-https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=handoff_plan
+https://tryheirline.com/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=handoff_plan
 ```
 
 ## Meta campaign build sheet
@@ -199,4 +199,3 @@ Tomorrow's sync should end with explicit answers to these questions:
 6. Who will respond to leads and Reddit comments?
 7. Can PR #7 be merged after this final review?
 8. Once the paused campaigns pass QA, may the team launch later that day?
-

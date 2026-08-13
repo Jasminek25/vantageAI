@@ -128,7 +128,7 @@ separate written price approval.
 **Tracked destination**
 
 ```text
-https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=parent_plan
+https://tryheirline.com/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=parent_plan
 ```
 
 ![Meta A upload asset](marketing-assets/heirline-meta-parent-plan-4x5.png)
@@ -158,7 +158,7 @@ Ads Manager.
 **Tracked destination**
 
 ```text
-https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=prepared_future
+https://tryheirline.com/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=prepared_future
 ```
 
 ![Meta B upload asset](marketing-assets/heirline-meta-prepared-future-4x5.png)
@@ -169,13 +169,12 @@ https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=meta&utm_medium
 
 **Body**
 
-> We're testing Heirline, a guided family wealth workspace that helps parents
-> organize a future financial handoff, share only approved context, and give
-> heirs clear learning steps before money changes hands. It is designed to
-> complement attorneys and financial advisors, not replace them. If you have
-> dealt with inheritance planning, what felt hardest: finding documents,
-> understanding roles, starting the conversation, or preparing the next
-> generation? Explore the prototype and join the early-access research pilot.
+> We’re building Heirline, a family wealth-planning tool that helps parents
+> organize a future financial handoff and helps heirs prepare for investing,
+> taxes, trusts, and financial responsibility. If you have dealt with
+> inheritance planning, what was the hardest part, and what would make a tool
+> like this useful or untrustworthy? Explore the early-access pilot and share
+> your honest feedback.
 
 **CTA:** Learn More
 
@@ -186,7 +185,7 @@ https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=meta&utm_medium
 **Tracked destination**
 
 ```text
-https://[FINAL_DOMAIN]/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=handoff_plan
+https://tryheirline.com/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=handoff_plan
 ```
 
 This preserves Jasmine's discussion-led idea while making the product and
@@ -239,7 +238,7 @@ and available targeting can change.
    advertiser details, privacy/disclaimer language, and team access.
 2. Purchase the approved domain in a Vantage-owned account and connect it to
    GitHub Pages with HTTPS.
-3. Replace `[FINAL_DOMAIN]` in the three tagged links.
+3. Verify the three tagged `tryheirline.com` links after deployment.
 4. Open each link and confirm it launches the early-access form immediately.
 5. Submit one labeled QA record through each link and verify its source,
    campaign, and creative in the live validation sheet.
