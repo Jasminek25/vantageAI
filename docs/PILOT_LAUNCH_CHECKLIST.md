@@ -1,10 +1,22 @@
 # Heirline $200 Pilot — Approval and Launch Checklist
 
-Updated: August 2, 2026
+Updated: August 18, 2026
 
 This is the operating checklist for the first Vantage AI-funded Heirline market
 test. It deliberately separates work the student team can prepare from actions
 that require Vantage AI ownership or approval.
+
+## Current checkpoint
+
+- `tryheirline.com` is purchased through Vantage AI, hosted on Vercel, and live
+  over HTTPS.
+- The Reddit Pixel is consent-gated and the first-party Google Sheet collector
+  records tagged visits, leads, and anonymous product-behavior events.
+- Prelaunch QA rows are retained as evidence but excluded from production-pilot
+  totals. Paid results remain at zero until a campaign is launched.
+- Reddit configuration and tagged-path QA are the active launch path. Meta is
+  blocked because the provided Facebook account is disabled.
+- No campaign has been launched and no advertising spend has occurred.
 
 ## Launch decision
 
@@ -58,17 +70,18 @@ An or another authorized adult at Vantage AI should:
 
 ## Team actions after access is granted
 
-1. Buy the approved domain in the Vantage-owned registrar account.
-2. Add the domain to GitHub Pages, set the repository custom domain, configure
-   DNS, and verify HTTPS.
-3. Verify the three tagged `tryheirline.com` campaign URLs below.
-4. Confirm the live site loads on phone and desktop.
-5. Open each tagged URL and verify that the family interest form opens
+1. Confirm `tryheirline.com` continues resolving through Vercel with HTTPS.
+2. Verify the three tagged `tryheirline.com` campaign URLs below.
+3. Confirm the live site loads on phone and desktop.
+4. Open each tagged URL and verify that the family interest form opens
    immediately.
-6. Submit one clearly labeled test lead from each URL.
-7. Confirm the three leads and associated events appear in the `Live` Google
-   Sheet rows with the correct source and content values.
-8. Delete or exclude the three QA records from campaign reporting.
+5. Submit one clearly labeled test lead from each URL.
+6. Confirm the leads and associated events appear in the Google Sheet with the
+   correct source, campaign, content, and anonymous session values.
+7. Confirm the same session records consented engagement, dashboard selection,
+   and feature-opening events without recording private financial inputs.
+8. Keep QA records labeled with a `qa` content tag so they remain reviewable but
+   are excluded from production reporting.
 9. Load the campaigns in a **paused** state and complete the settings review.
 10. Take screenshots of the paused campaign settings and send them to An for
     final approval.
@@ -187,15 +200,16 @@ The $200 test is directional, not proof of product-market fit.
   repeated user problem, and identify one audience-and-message combination worth
   a larger test.
 
-## Meeting approval checklist
+## Next-sync decision checklist
 
-Tomorrow's sync should end with explicit answers to these questions:
+The next sync should end with explicit answers to these questions:
 
-1. Is `tryheirline.com` approved, or which fallback should be purchased?
-2. Does the exact $12 / $100 / $70 / $18 allocation fit An's intent?
-3. Who creates the Vantage-owned registrar, Meta, and Reddit accounts?
-4. What legal business name, address, and public contact should appear?
-5. Who approves the privacy and non-advice language?
-6. Who will respond to leads and Reddit comments?
-7. Can PR #7 be merged after this final review?
-8. Once the paused campaigns pass QA, may the team launch later that day?
+1. Does An want the team to proceed with Reddit while Meta access is repaired?
+2. Is the final Reddit campaign visible in a saved, paused state in the
+   Vantage-owned account?
+3. Who will monitor Reddit comments and who owns consented lead follow-up?
+4. Does An approve the current narrow measurement/privacy language?
+5. After collaborator QA passes, what exact written approval should authorize
+   the first paid day?
+6. Should unused Meta budget remain reserved or move to Reddit only after a
+   separate approval?

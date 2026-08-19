@@ -33,7 +33,11 @@ export default function HeirDashboard({ onSwitchRole }) {
     return () => window.removeEventListener('heirline:handoff', syncHandoff);
   }, []);
 
-  function navigate(next) { setView(next); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  function navigate(next) {
+    if (next !== view) trackEvent('dashboard_feature_opened', { role: 'heir', feature: next });
+    setView(next);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   function notify(message) { setNotice(message); window.setTimeout(() => setNotice(''), 2600); }
 
   if (!data) return <div className="heir-loading"><span>◇</span><strong>Preparing heir workspace…</strong></div>;

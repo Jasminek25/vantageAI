@@ -60,10 +60,12 @@ export default function LandingPage({ onChooseRole }) {
   function openInterest(nextAudience = 'family') {
     setAudience(nextAudience);
     setInterestOpen(true);
+    trackEvent('cta_clicked', { cta: nextAudience === 'advisor' ? 'request_pilot_information' : 'join_early_access', audience: nextAudience });
     trackEvent('interest_form_opened', { audience: nextAudience });
   }
 
   function enterDashboard(role) {
+    trackEvent('cta_clicked', { cta: `enter_${role}_dashboard`, role });
     trackEvent('dashboard_selected', { role });
     onChooseRole(role);
   }
@@ -141,7 +143,7 @@ export default function LandingPage({ onChooseRole }) {
       <footer className="landing-footer"><strong>Heirline</strong><span>Family wealth planning for every generation.<small>Educational and organizational prototype. Not legal, tax, investment, or financial advice. <button type="button" onClick={() => setPrivacyOpen(true)}>Pilot privacy notice</button></small></span></footer>
       {interestOpen && <InterestDialog initialAudience={audience} onClose={() => setInterestOpen(false)} />}
       {privacyOpen && <PrivacyDialog onClose={() => setPrivacyOpen(false)} />}
-      {!consent && <section className="tracking-consent" aria-label="Analytics choice"><p><strong>Help us evaluate this pilot.</strong> With your permission, Heirline uses Reddit advertising measurement to understand visits and signups. We do not send the financial information shown in this demonstration.</p><div><button type="button" onClick={() => { setTrackingConsent('declined'); setConsent('declined'); }}>Not now</button><button type="button" onClick={() => { setTrackingConsent('granted'); setConsent('granted'); }}>Allow measurement</button><button type="button" onClick={() => setPrivacyOpen(true)}>Privacy details</button></div></section>}
+      {!consent && <section className="tracking-consent" aria-label="Analytics choice"><p><strong>Help us evaluate this pilot.</strong> With your permission, Heirline uses Reddit advertising measurement and anonymous product analytics to understand visits, engagement, dashboard interest, and signups. We do not record the financial information shown in this demonstration.</p><div><button type="button" onClick={() => { setTrackingConsent('declined'); setConsent('declined'); }}>Not now</button><button type="button" onClick={() => { setTrackingConsent('granted'); setConsent('granted'); }}>Allow measurement</button><button type="button" onClick={() => setPrivacyOpen(true)}>Privacy details</button></div></section>}
     </div>
   );
 }
@@ -185,7 +187,8 @@ function PrivacyDialog({ onClose }) {
       <button className="interest-close" type="button" aria-label="Close" onClick={onClose}>×</button>
       <p className="landing-kicker">PILOT PRIVACY NOTICE</p><h2 id="privacy-title">A narrow notice for market validation.</h2>
       <p>Heirline is an early-stage Vantage AI pilot. The public form collects only your email, audience type, optional organization, selected priority, consent, and campaign source so the team can respond and evaluate interest.</p>
-      <h3>Advertising measurement</h3><p>If you choose “Allow measurement,” the Reddit Pixel records visits and signup events for campaign reporting. Heirline does not use the Pixel to send the fictional financial values shown inside the product demonstration.</p>
+      <h3>Advertising and product measurement</h3><p>If you choose “Allow measurement,” the Reddit Pixel records visits and signup events for campaign reporting. Heirline also records anonymous page visits, scroll milestones, time thresholds, calls to action, dashboard choices, and feature openings so the team can understand whether the pilot is useful.</p>
+      <h3>What is not recorded</h3><p>Heirline does not record mouse coordinates, coach questions, documents, or the fictional financial values entered or shown inside the product demonstration.</p>
       <h3>How information is used</h3><p>Pilot information is used only to measure interest, understand which outreach brought visitors to Heirline, and contact people who asked about early access or a pilot. Do not submit legal, financial, tax, account, or identification information.</p>
       <h3>Your choice</h3><p>You may decline advertising measurement and still use the demonstration or submit the interest form. Pilot records should be reviewed and removed when they are no longer needed for this validation effort.</p>
       <button className="landing-primary" type="button" onClick={onClose}>Return to Heirline</button>

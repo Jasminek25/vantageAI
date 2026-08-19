@@ -5,6 +5,9 @@ const DATA_ENDPOINT = import.meta.env.VITE_DATA_ENDPOINT || DEFAULT_DATA_ENDPOIN
 const EVENT_KEY = 'heirline-demo-events';
 const LEAD_KEY = 'heirline-demo-leads';
 const SESSION_KEY = 'heirline-demo-session';
+const CONSENT_KEY = 'heirline-pilot-tracking-consent';
+const SCROLL_MILESTONES = [25, 50, 75];
+const ENGAGEMENT_MILESTONES = [10, 30, 60];
 
 function readList(key) {
   try { return JSON.parse(window.localStorage.getItem(key) || '[]'); }
@@ -51,6 +54,7 @@ async function deliver(payload) {
 }
 
 export async function trackEvent(name, details = {}) {
+  if (!measurementAllowed()) return null;
   const event = {
     recordType: 'event',
     name,
@@ -63,6 +67,66 @@ export async function trackEvent(name, details = {}) {
   writeList(EVENT_KEY, [...readList(EVENT_KEY), event]);
   await deliver(event);
   return event;
+}
+
+export function measurementAllowed() {
+  return window.localStorage.getItem(CONSENT_KEY) === 'granted';
+}
+
+export function startBehaviorTracking(experience) {
+  if (!measurementAllowed()) return () => {};
+
+  const recordedScroll = new Set();
+  const recordedEngagement = new Set();
+  let maxScroll = 0;
+  let activeSeconds = 0;
+  let ended = false;
+
+  trackEvent('page_view', { experience });
+
+  function recordScroll() {
+    const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const percent = Math.min(100, Math.max(0, Math.round((window.scrollY / scrollable) * 100)));
+    maxScroll = Math.max(maxScroll, percent);
+
+    SCROLL_MILESTONES.forEach(milestone => {
+      if (percent >= milestone && !recordedScroll.has(milestone)) {
+        recordedScroll.add(milestone);
+        trackEvent(`scroll_${milestone}`, { experience, percent: milestone });
+      }
+    });
+  }
+
+  function countEngagement() {
+    if (document.visibilityState !== 'visible') return;
+    activeSeconds += 1;
+    ENGAGEMENT_MILESTONES.forEach(seconds => {
+      if (activeSeconds >= seconds && !recordedEngagement.has(seconds)) {
+        recordedEngagement.add(seconds);
+        trackEvent(`engaged_${seconds}_seconds`, { experience, seconds });
+      }
+    });
+  }
+
+  function finish(reason) {
+    if (ended) return;
+    ended = true;
+    if (activeSeconds > 0 || maxScroll > 0) {
+      trackEvent('session_summary', { experience, activeSeconds, maxScroll, reason });
+    }
+  }
+
+  const engagementTimer = window.setInterval(countEngagement, 1000);
+  const onPageHide = () => finish('pagehide');
+  window.addEventListener('scroll', recordScroll, { passive: true });
+  window.addEventListener('pagehide', onPageHide);
+
+  return () => {
+    window.clearInterval(engagementTimer);
+    window.removeEventListener('scroll', recordScroll);
+    window.removeEventListener('pagehide', onPageHide);
+    finish('experience_change');
+  };
 }
 
 export async function submitInterest(form) {

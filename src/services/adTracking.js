@@ -8,6 +8,7 @@ export function trackingConsent() {
 export function setTrackingConsent(value) {
   window.localStorage.setItem(CONSENT_KEY, value);
   if (value === 'granted') initializeAdTracking();
+  window.dispatchEvent(new CustomEvent('heirline:tracking-consent', { detail: value }));
 }
 
 export function initializeAdTracking() {
