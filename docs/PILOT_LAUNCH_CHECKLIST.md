@@ -1,6 +1,6 @@
 # Heirline $200 Pilot — Approval and Launch Checklist
 
-Updated: August 18, 2026
+Updated: August 31, 2026
 
 This is the operating checklist for the first Vantage AI-funded Heirline market
 test. It deliberately separates work the student team can prepare from actions
@@ -10,12 +10,17 @@ that require Vantage AI ownership or approval.
 
 - `tryheirline.com` is purchased through Vantage AI, hosted on Vercel, and live
   over HTTPS.
-- The Reddit Pixel is consent-gated and the first-party Google Sheet collector
-  records tagged visits, leads, and anonymous product-behavior events.
+- The Reddit Pixel, Google Analytics 4, and Microsoft Clarity are implemented
+  behind the site's measurement-consent choice. The first-party Google Sheet
+  collector records tagged visits, leads, and anonymous product-behavior
+  events.
 - Prelaunch QA rows are retained as evidence but excluded from production-pilot
   totals. Paid results remain at zero until a campaign is launched.
-- Reddit configuration and tagged-path QA are the active launch path. Meta is
-  blocked because the provided Facebook account is disabled.
+- Two distinct Reddit concepts are the active launch path: a conventional
+  parent-planning control and a more provocative heir-readiness treatment.
+  Meta remains blocked because the provided Facebook account is disabled.
+- Analytics must not be called launch-ready until real consented QA events are
+  visible in Reddit Events Manager, GA4, Clarity, and the connected Sheet.
 - No campaign has been launched and no advertising spend has occurred.
 
 ## Launch decision
@@ -71,7 +76,7 @@ An or another authorized adult at Vantage AI should:
 ## Team actions after access is granted
 
 1. Confirm `tryheirline.com` continues resolving through Vercel with HTTPS.
-2. Verify the three tagged `tryheirline.com` campaign URLs below.
+2. Verify the two tagged `tryheirline.com` Reddit campaign URLs below.
 3. Confirm the live site loads on phone and desktop.
 4. Open each tagged URL and verify that the family interest form opens
    immediately.
@@ -101,10 +106,16 @@ https://tryheirline.com/?open=interest&audience=family&utm_source=meta&utm_mediu
 https://tryheirline.com/?open=interest&audience=family&utm_source=meta&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=prepared_future
 ```
 
-### Reddit ad — Handoff Plan
+### Reddit control — Parent planning
 
 ```text
-https://tryheirline.com/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_08&utm_content=handoff_plan
+https://tryheirline.com/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_09&utm_content=parent_control
+```
+
+### Reddit treatment — Heir readiness
+
+```text
+https://tryheirline.com/?open=interest&audience=family&utm_source=reddit&utm_medium=paid_social&utm_campaign=heirline_family_validation_2026_09&utm_content=heir_treatment
 ```
 
 ## Meta campaign build sheet
@@ -133,23 +144,44 @@ https://tryheirline.com/?open=interest&audience=family&utm_source=reddit&utm_med
 
 ## Reddit campaign build sheet
 
-- Campaign name: `HL_Family_Validation_Aug2026_Reddit`
+- Campaign name: `HL_Family_Validation_Sep2026_Reddit`
 - Objective: Traffic
 - Bid strategy: Lowest cost
-- Budget: $10 per day for seven days; fixed end date
+- Budget: two ad groups at $5 per day each for seven days; $70 maximum total
+- Schedule: seven complete paid days with a fixed end date and no automatic
+  extension
 - Placements: Feed and Conversation
 - Location: United States
-- Interests to check in Ads Manager: Personal Finance, Retirement, Family and
-  Relationships, Financial Planning, and Wealth Management
-- Keyword themes to check: estate planning, inheritance, beneficiary,
-  beneficiaries, family trust, wills and trusts, preparing heirs, and financial
-  handoff
-- Candidate communities to verify for eligibility: `r/personalfinance`,
-  `r/EstatePlanning`, `r/retirement`, and `r/financialplanning`
-- Creative: Parent Plan / Heir Ready 4:5 image
+- Ad group A: `HL_Control_ParentPlanning_US`
+  - Thesis: a direct, familiar estate-planning message will resonate with older
+    family decision-makers who want to reduce confusion for their families.
+  - Targeting to verify in the live account: United States; ages 45+ if
+    available; Personal Finance, Retirement, Financial Planning, Estate
+    Planning, Family and Relationships; eligible communities such as
+    `r/personalfinance`, `r/EstatePlanning`, and `r/retirement`.
+  - Title: `Your family shouldn't have to figure out your estate on their own.`
+  - Body: `You've spent years building your wealth. Heirline helps you organize
+    the plan, explore transfer options, and keep the documents and decisions
+    your family may need in one clear place. Make the handoff proactive instead
+    of leaving your family to piece it together later.`
+  - Destination: the `parent_control` URL above.
+- Ad group B: `HL_Treatment_HeirReadiness_US`
+  - Thesis: a provocative preparedness question will create stronger curiosity
+    among younger adults who expect to help manage or receive family wealth.
+  - Targeting to verify in the live account: United States; ages 18–44 if
+    available; Personal Finance, Investing, Financial Literacy, Family and
+    Relationships; eligible communities such as `r/personalfinance`,
+    `r/investing`, and `r/financialplanning`.
+  - Title: `If you inherited your family's wealth tomorrow, would you know what to do?`
+  - Body: `An inheritance can arrive with major decisions. Heirline helps you
+    learn the basics, understand the documents involved, and build a clearer
+    financial roadmap before the handoff happens. You don't have to wait until
+    you inherit to start preparing.`
+  - Destination: the `heir_treatment` URL above.
+- Brand: use `Heirline`, never `Vantage AI`, in public-facing ad copy.
 - CTA: Learn More
-- Comments: enable only if one named team member checks them at least daily,
-  answers product questions without giving personal advice, and escalates legal,
+- Comments: enabled. Jasmine and Aayush are the proposed daily monitors; they
+  should answer product questions without personal advice and escalate legal,
   tax, or investment questions instead of answering them.
 
 Not every interest, keyword, or community is guaranteed to be available in a
@@ -159,17 +191,25 @@ new advertiser account. The live options shown in Ads Manager control.
 
 - Domain resolves with HTTPS and no browser warning.
 - Logo, buttons, dashboard switching, and mobile layout work.
-- All three links retain their UTM parameters.
+- Both Reddit links retain their UTM parameters.
 - Each link opens the interest form with `Family member` selected.
 - The form refuses submission without email, priority, and consent.
 - The form warns visitors not to enter financial, legal, or account data.
 - The Google Sheet receives the lead and `interest_submitted` event.
+- Reddit Events Manager receives `PageVisit` and `Lead` from a consented QA
+  session and receives nothing from a declined-consent session.
+- GA4 Realtime receives the tagged page view, dashboard/feature events, and the
+  `interest_submitted` conversion candidate with the correct campaign and
+  content values.
+- Clarity receives the consented session and custom product events with Strict
+  masking enabled; typed form and financial-demo values must not be visible in
+  recordings.
 - Sample and live rows are visibly separated.
 - Ad copy matches the landing-page promise.
 - The website and ads state that Heirline is educational and organizational,
   not legal, tax, investment, or financial advice.
 - Campaign and ad-set spend controls add up to no more than the approved amount.
-- Both campaigns are paused before An's final review.
+- Both Reddit ad groups and ads are paused before An's final review.
 
 ## Operating cadence
 

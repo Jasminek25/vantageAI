@@ -1,3 +1,5 @@
+import { trackMeasurementEvent } from './adTracking.js';
+
 const DEFAULT_DATA_ENDPOINT =
   'https://script.google.com/macros/s/AKfycbyodapk7ohVY9_iStL0V7WqT9Bd-o4wIdbt5o7_OEL_Cw6lT8Ynzb_F_h7xAtw0wXan/exec';
 
@@ -65,6 +67,14 @@ export async function trackEvent(name, details = {}) {
     ...campaignContext()
   };
   writeList(EVENT_KEY, [...readList(EVENT_KEY), event]);
+  trackMeasurementEvent(name, {
+    experience: details.experience || '',
+    feature: details.feature || '',
+    audience: details.audience || '',
+    source: event.source,
+    campaign: event.campaign,
+    content: event.content
+  });
   await deliver(event);
   return event;
 }
