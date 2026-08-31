@@ -1,6 +1,6 @@
 const REDDIT_PIXEL_ID = import.meta.env.VITE_REDDIT_PIXEL_ID || 'a2_jhw5133br6mq';
-const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || '';
-const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID || '';
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-HC8RE9HDVF';
+const CLARITY_PROJECT_ID = import.meta.env.VITE_CLARITY_PROJECT_ID || 'yb6hb6qtf5';
 const CONSENT_KEY = 'heirline-pilot-tracking-consent';
 
 export function trackingConsent() {
