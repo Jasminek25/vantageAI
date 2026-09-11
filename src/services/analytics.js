@@ -1,4 +1,4 @@
-import { trackMeasurementEvent } from './adTracking.js';
+import { initializeAdTracking, trackMeasurementEvent } from './adTracking.js';
 
 const DEFAULT_DATA_ENDPOINT =
   'https://script.google.com/macros/s/AKfycbyodapk7ohVY9_iStL0V7WqT9Bd-o4wIdbt5o7_OEL_Cw6lT8Ynzb_F_h7xAtw0wXan/exec';
@@ -57,6 +57,7 @@ async function deliver(payload) {
 
 export async function trackEvent(name, details = {}) {
   if (!measurementAllowed()) return null;
+  initializeAdTracking();
   const event = {
     recordType: 'event',
     name,
@@ -68,8 +69,13 @@ export async function trackEvent(name, details = {}) {
   };
   writeList(EVENT_KEY, [...readList(EVENT_KEY), event]);
   trackMeasurementEvent(name, {
-    experience: details.experience || '',
+    experience: details.experience || details.role || window.location.hash.slice(1) || 'landing',
+    role: details.role || '',
     feature: details.feature || '',
+    cta: details.cta || '',
+    percent: details.percent,
+    active_seconds: details.activeSeconds,
+    max_scroll: details.maxScroll,
     audience: details.audience || '',
     source: event.source,
     campaign: event.campaign,

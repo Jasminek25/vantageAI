@@ -44,7 +44,7 @@ function initializeGoogleAnalytics() {
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments); };
-  window.gtag('consent', 'default', {
+  window.gtag('consent', window.__heirlineGaInitialized ? 'update' : 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
     ad_personalization: 'denied',
@@ -59,16 +59,22 @@ function initializeGoogleAnalytics() {
     document.head.appendChild(script);
   }
 
+  if (window.__heirlineGaInitialized) return;
+  window.__heirlineGaInitialized = true;
   window.gtag('js', new Date());
   window.gtag('config', GA_MEASUREMENT_ID, {
-    send_page_view: true,
+    send_page_view: false,
     allow_google_signals: false,
     allow_ad_personalization_signals: false
   });
 }
 
 function initializeClarity() {
-  if (!CLARITY_PROJECT_ID || window.clarity) return;
+  if (!CLARITY_PROJECT_ID) return;
+  if (window.clarity) {
+    window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'granted' });
+    return;
+  }
 
   window.clarity = function clarity() {
     window.clarity.q.push(arguments);
