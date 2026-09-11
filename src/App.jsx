@@ -8,7 +8,7 @@ import {
 import LandingPage from './components/LandingPage.jsx';
 import HeirDashboard from './components/HeirDashboard.jsx';
 import FutureFeature from './components/FutureFeature.jsx';
-import { trackEvent } from './services/analytics.js';
+import { startBehaviorTracking, trackEvent } from './services/analytics.js';
 import { getSavedReadiness, saveReadinessLocally, saveSharedFamilyContext } from './services/sharedPlan.js';
 import { initializeAdTracking } from './services/adTracking.js';
 
@@ -28,7 +28,18 @@ export default function App() {
     return () => window.removeEventListener('hashchange', syncRole);
   }, []);
 
-  useEffect(() => { trackEvent('page_view', { experience: role }); }, [role]);
+  useEffect(() => {
+    let stopTracking = startBehaviorTracking(role);
+    const syncTrackingConsent = () => {
+      stopTracking();
+      stopTracking = startBehaviorTracking(role);
+    };
+    window.addEventListener('heirline:tracking-consent', syncTrackingConsent);
+    return () => {
+      window.removeEventListener('heirline:tracking-consent', syncTrackingConsent);
+      stopTracking();
+    };
+  }, [role]);
   useEffect(() => { initializeAdTracking(); }, []);
 
   function chooseRole(nextRole) {
@@ -88,6 +99,7 @@ function ParentDashboard({ onSwitchRole }) {
   useEffect(() => { getParentDashboard().then(setData); }, []);
 
   function navigate(next) {
+    if (next !== view) trackEvent('dashboard_feature_opened', { role: 'parent', feature: next });
     setView(next);
     setMobileNav(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });

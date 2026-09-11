@@ -60,10 +60,12 @@ export default function LandingPage({ onChooseRole }) {
   function openInterest(nextAudience = 'family') {
     setAudience(nextAudience);
     setInterestOpen(true);
+    trackEvent('cta_clicked', { cta: nextAudience === 'advisor' ? 'request_pilot_information' : 'join_early_access', audience: nextAudience });
     trackEvent('interest_form_opened', { audience: nextAudience });
   }
 
   function enterDashboard(role) {
+    trackEvent('cta_clicked', { cta: `enter_${role}_dashboard`, role });
     trackEvent('dashboard_selected', { role });
     onChooseRole(role);
   }
@@ -140,8 +142,8 @@ export default function LandingPage({ onChooseRole }) {
 
       <footer className="landing-footer"><strong>Heirline</strong><span>Family wealth planning for every generation.<small>Educational and organizational prototype. Not legal, tax, investment, or financial advice. <button type="button" onClick={() => setPrivacyOpen(true)}>Pilot privacy notice</button></small></span></footer>
       {interestOpen && <InterestDialog initialAudience={audience} onClose={() => setInterestOpen(false)} />}
-      {privacyOpen && <PrivacyDialog onClose={() => setPrivacyOpen(false)} />}
-      {!consent && <section className="tracking-consent" aria-label="Analytics choice"><p><strong>Help us evaluate this pilot.</strong> With your permission, Heirline uses Reddit advertising measurement to understand visits and signups. We do not send the financial information shown in this demonstration.</p><div><button type="button" onClick={() => { setTrackingConsent('declined'); setConsent('declined'); }}>Not now</button><button type="button" onClick={() => { setTrackingConsent('granted'); setConsent('granted'); }}>Allow measurement</button><button type="button" onClick={() => setPrivacyOpen(true)}>Privacy details</button></div></section>}
+      {privacyOpen && <PrivacyDialog consent={consent} onConsentChange={value => { setTrackingConsent(value); setConsent(value); }} onClose={() => setPrivacyOpen(false)} />}
+      {!consent && <section className="tracking-consent" aria-label="Analytics choice"><p><strong>Help us evaluate this pilot.</strong> With your permission, Heirline uses Reddit advertising measurement and anonymous product analytics to understand visits, engagement, dashboard interest, and signups. We do not record the financial information shown in this demonstration.</p><div><button type="button" onClick={() => { setTrackingConsent('declined'); setConsent('declined'); }}>Not now</button><button type="button" onClick={() => { setTrackingConsent('granted'); setConsent('granted'); }}>Allow measurement</button><button type="button" onClick={() => setPrivacyOpen(true)}>Privacy details</button></div></section>}
     </div>
   );
 }
@@ -164,7 +166,7 @@ function InterestDialog({ initialAudience, onClose }) {
       <button className="interest-close" type="button" aria-label="Close" onClick={onClose}>×</button>
       {status.startsWith('You') || status.startsWith('Saved') ? <div className="interest-success"><span>✓</span><p className="landing-kicker">INTEREST RECORDED</p><h2>Thank you for helping shape Heirline.</h2><p>{status}</p><button className="landing-primary" type="button" onClick={onClose}>Return to Heirline</button></div> : <>
         <p className="landing-kicker">EARLY ACCESS</p><h2 id="interest-title">Tell us where Heirline could help.</h2><p>We only collect what is needed to follow up. Do not enter financial, legal, or account information.</p>
-        <form onSubmit={submit}>
+        <form onSubmit={submit} data-clarity-mask="true">
           <fieldset><legend>I’m interested as a…</legend><label><input type="radio" name="audience" checked={form.audience === 'family'} onChange={() => setForm({ ...form, audience: 'family' })} /> Family member</label><label><input type="radio" name="audience" checked={form.audience === 'advisor'} onChange={() => setForm({ ...form, audience: 'advisor' })} /> Advisor or wealth firm</label></fieldset>
           <label>Email address<input type="email" required value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} placeholder="you@example.com" /></label>
           {form.audience === 'advisor' && <label>Organization <span>(optional)</span><input value={form.organization} onChange={event => setForm({ ...form, organization: event.target.value })} placeholder="Firm name" /></label>}
@@ -179,16 +181,21 @@ function InterestDialog({ initialAudience, onClose }) {
   </div>;
 }
 
-function PrivacyDialog({ onClose }) {
+function PrivacyDialog({ consent, onConsentChange, onClose }) {
   return <div className="interest-overlay" role="presentation" onMouseDown={event => event.target === event.currentTarget && onClose()}>
     <section className="interest-dialog privacy-dialog" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
       <button className="interest-close" type="button" aria-label="Close" onClick={onClose}>×</button>
       <p className="landing-kicker">PILOT PRIVACY NOTICE</p><h2 id="privacy-title">A narrow notice for market validation.</h2>
       <p>Heirline is an early-stage Vantage AI pilot. The public form collects only your email, audience type, optional organization, selected priority, consent, and campaign source so the team can respond and evaluate interest.</p>
-      <h3>Advertising measurement</h3><p>If you choose “Allow measurement,” the Reddit Pixel records visits and signup events for campaign reporting. Heirline does not use the Pixel to send the fictional financial values shown inside the product demonstration.</p>
+      <h3>Advertising and product measurement</h3><p>If you choose “Allow measurement,” Reddit Pixel, Google Analytics, and Microsoft Clarity receive campaign tags and anonymous interaction events such as page visits, clicks, scroll depth, time thresholds, dashboard choices, feature openings, and signups. Clarity also creates masked session replays and heatmaps so the team can see where visitors engage or get stuck.</p>
+      <h3>What is not recorded</h3><p>Typed form entries, coach questions, and financial-demo inputs are masked from Clarity. The site does not send entered financial values to Reddit, Google Analytics, or Clarity. Clarity is configured in Strict masking mode so page text, numbers, and images are obscured in recordings.</p>
       <h3>How information is used</h3><p>Pilot information is used only to measure interest, understand which outreach brought visitors to Heirline, and contact people who asked about early access or a pilot. Do not submit legal, financial, tax, account, or identification information.</p>
-      <h3>Your choice</h3><p>You may decline advertising measurement and still use the demonstration or submit the interest form. Pilot records should be reviewed and removed when they are no longer needed for this validation effort.</p>
-      <button className="landing-primary" type="button" onClick={onClose}>Return to Heirline</button>
+      <h3>Your choice</h3><p>You may decline advertising measurement and still use the demonstration or submit the interest form. You can change your measurement choice here at any time. Pilot records should be reviewed and removed when they are no longer needed for this validation effort.</p>
+      <div className="landing-actions">
+        {consent !== 'declined' && <button className="landing-secondary" type="button" onClick={() => onConsentChange('declined')}>Disable measurement</button>}
+        {consent !== 'granted' && <button className="landing-primary" type="button" onClick={() => onConsentChange('granted')}>Allow measurement</button>}
+        <button className="landing-secondary" type="button" onClick={onClose}>Return to Heirline</button>
+      </div>
     </section>
   </div>;
 }
